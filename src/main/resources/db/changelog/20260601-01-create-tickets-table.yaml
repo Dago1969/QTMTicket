@@ -1,0 +1,114 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260601-01-create-tickets-table
+      author: copilot
+      preConditions:
+        - onFail: MARK_RAN
+          onError: HALT
+          not:
+            tableExists:
+              tableName: tickets
+      changes:
+        - createTable:
+            tableName: tickets
+            columns:
+              - column:
+                  name: id
+                  type: INTEGER
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: realm
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: project
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: patient_id
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: therapeutic_plan_id
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: ticket_type
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: title
+                  type: VARCHAR(500)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: TEXT
+                  constraints:
+                    nullable: true
+              - column:
+                  name: content_json
+                  type: TEXT
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_at
+                  type: DATETIME
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: DATETIME
+                  constraints:
+                    nullable: false
+
+        # Indici per migliorare le query
+        - createIndex:
+            indexName: idx_tickets_realm
+            tableName: tickets
+            columns:
+              - column:
+                  name: realm
+        - createIndex:
+            indexName: idx_tickets_project
+            tableName: tickets
+            columns:
+              - column:
+                  name: project
+        - createIndex:
+            indexName: idx_tickets_patient_id
+            tableName: tickets
+            columns:
+              - column:
+                  name: patient_id
+        - createIndex:
+            indexName: idx_tickets_status
+            tableName: tickets
+            columns:
+              - column:
+                  name: status
+        - createIndex:
+            indexName: idx_tickets_therapeutic_plan_id
+            tableName: tickets
+            columns:
+              - column:
+                  name: therapeutic_plan_id
+        - createIndex:
+            indexName: idx_tickets_ticket_type
+            tableName: tickets
+            columns:
+              - column:
+                  name: ticket_type
