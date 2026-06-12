@@ -1,9 +1,12 @@
-package com.qtm.ticket.service;
+package com.qtm.ticket;
 
-import com.qtm.ticket.dto.TicketDto;
-import com.qtm.ticket.entity.TicketEntity;
-import com.qtm.ticket.exception.TicketNotFoundException;
-import com.qtm.ticket.exception.TicketValidationException;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +16,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import com.qtm.ticket.dto.TicketDto;
+import com.qtm.ticket.exception.TicketNotFoundException;
+import com.qtm.ticket.exception.TicketValidationException;
+import com.qtm.ticket.service.TicketService;
 
 /**
  * Test di integrazione per il TicketService.

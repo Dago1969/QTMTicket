@@ -114,7 +114,11 @@ public class TicketEntity {
         SUPPORT,
         ISSUE,
         ENHANCEMENT,
-        DOCUMENTATION
+        DOCUMENTATION,
+        THERAPEUTIC_PLAN_UPDATE,
+        PATIENT_SUPPORT,
+        TECHNICAL_ISSUE,
+        ADMINISTRATIVE_REQUEST
     }
 
     /**

@@ -14,7 +14,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: INTEGER
+                  type: BIGINT
                   autoIncrement: true
                   constraints:
                     primaryKey: true
@@ -75,7 +75,6 @@ databaseChangeLog:
                   constraints:
                     nullable: false
 
-        # Indici per migliorare le query
         - createIndex:
             indexName: idx_tickets_realm
             tableName: tickets
