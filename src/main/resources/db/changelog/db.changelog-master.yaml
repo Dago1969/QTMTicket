@@ -1,3 +1,21 @@
 databaseChangeLog:
   - include:
       file: db/changelog/20260601-01-create-tickets-table.yaml
+  - include:
+      file: db/changelog/20260614-01-create-departments-and-insert-data.yaml
+  - include:
+      file: db/changelog/20260626-01-create-geodata-tables.yaml
+  - include:
+      file: db/changelog/20260626-02-load-geodata-data.yaml
+  - include:
+      file: db/changelog/20260626-03-create-asl-table.yaml
+  - include:
+      file: db/changelog/20260626-04-load-asl-data.yaml
+  - include:
+      file: db/changelog/20260627-01-create-structure-types-and-structures.yaml
+  - include:
+      file: db/changelog/20260627-02-load-structures-data.yaml
+  - include:
+      file: db/changelog/20260627-03-create-disciplines-and-structure-departments.yaml
+  - include:
+      file: db/changelog/20260627-04-load-disciplines-and-structure-departments.yaml

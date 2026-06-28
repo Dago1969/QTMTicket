@@ -1,0 +1,83 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260627-01-create-structure-types-and-structures
+      author: copilot
+      preConditions:
+        - onFail: MARK_RAN
+          onError: HALT
+          not:
+            tableExists:
+              tableName: structure_types
+      changes:
+        - createTable:
+            tableName: structure_types
+            columns:
+              - column:
+                  name: code
+                  type: VARCHAR(50)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: description
+                  type: VARCHAR(500)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: structures
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: codice_regione
+                  type: VARCHAR(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: codice_azienda
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: codice_struttura
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: denominazione_struttura
+                  type: VARCHAR(500)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: indirizzo
+                  type: VARCHAR(500)
+              - column:
+                  name: codice_comune
+                  type: VARCHAR(50)
+              - column:
+                  name: comune
+                  type: VARCHAR(200)
+              - column:
+                  name: sigla_provincia
+                  type: VARCHAR(10)
+              - column:
+                  name: city_id
+                  type: BIGINT
+              - column:
+                  name: structure_type_code
+                  type: VARCHAR(50)
+        - addUniqueConstraint:
+            tableName: structures
+            columnNames: codice_regione, codice_azienda, codice_struttura
+            constraintName: uk_structures_key
+        - addForeignKeyConstraint:
+            baseTableName: structures
+            baseColumnNames: structure_type_code
+            referencedTableName: structure_types
+            referencedColumnNames: code
+            constraintName: fk_structures_structure_type

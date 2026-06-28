@@ -1,0 +1,64 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260627-03-create-disciplines-and-structure-departments
+      author: copilot
+      preConditions:
+        - onFail: MARK_RAN
+          onError: HALT
+          not:
+            tableExists:
+              tableName: discipline
+      changes:
+        - createTable:
+            tableName: discipline
+            columns:
+              - column:
+                  name: codice_disciplina
+                  type: VARCHAR(20)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: disciplina
+                  type: VARCHAR(200)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: structure_departments
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: codice_struttura
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: codice_disciplina
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: indirizzo
+                  type: VARCHAR(500)
+        - addUniqueConstraint:
+            tableName: structure_departments
+            columnNames: codice_struttura, codice_disciplina
+            constraintName: uk_structure_departments_key
+        - addForeignKeyConstraint:
+            baseTableName: structure_departments
+            baseColumnNames: codice_struttura
+            referencedTableName: structures
+            referencedColumnNames: codice_struttura
+            constraintName: fk_structure_departments_structure
+        - addForeignKeyConstraint:
+            baseTableName: structure_departments
+            baseColumnNames: codice_disciplina
+            referencedTableName: discipline
+            referencedColumnNames: codice_disciplina
+            constraintName: fk_structure_departments_discipline

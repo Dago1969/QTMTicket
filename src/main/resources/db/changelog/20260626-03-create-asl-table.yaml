@@ -1,0 +1,77 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260626-03-create-asl-table
+      author: copilot
+      runAlways: true
+      preConditions:
+        - onFail: MARK_RAN
+          onError: HALT
+          not:
+            tableExists:
+              tableName: asl
+      changes:
+        - createTable:
+            tableName: asl
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: codice_regione
+                  type: VARCHAR(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: codice_azienda
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: denominazione_azienda
+                  type: VARCHAR(500)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: city_id
+                  type: BIGINT
+              - column:
+                  name: indirizzo
+                  type: VARCHAR(500)
+              - column:
+                  name: cap
+                  type: VARCHAR(20)
+              - column:
+                  name: telefono
+                  type: VARCHAR(100)
+              - column:
+                  name: fax
+                  type: VARCHAR(100)
+              - column:
+                  name: email
+                  type: VARCHAR(200)
+              - column:
+                  name: sito_web
+                  type: VARCHAR(200)
+              - column:
+                  name: partita_iva
+                  type: VARCHAR(50)
+        - addUniqueConstraint:
+            columnNames: codice_regione, codice_azienda
+            tableName: asl
+            constraintName: uk_asl_codice_regione_codice_azienda
+        - addForeignKeyConstraint:
+            baseTableName: asl
+            baseColumnNames: codice_regione
+            referencedTableName: regions
+            referencedColumnNames: code
+            constraintName: fk_asl_region
+        - addForeignKeyConstraint:
+            baseTableName: asl
+            baseColumnNames: city_id
+            referencedTableName: cities
+            referencedColumnNames: id
+            constraintName: fk_asl_city

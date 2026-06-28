@@ -1,0 +1,153 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260627-02-load-structures-data
+      author: copilot
+      runAlways: true
+      preConditions:
+        - onFail: HALT
+          onError: HALT
+          tableExists:
+            tableName: structures
+      changes:
+        - sql:
+            splitStatements: false
+            endDelimiter: ";"
+            sql: |
+              DROP TABLE IF EXISTS structures_staging;
+        - createTable:
+            tableName: structures_staging
+            columns:
+              - column:
+                  name: anno
+                  type: VARCHAR(10)
+              - column:
+                  name: codice_regione
+                  type: VARCHAR(10)
+              - column:
+                  name: descrizione_regione
+                  type: VARCHAR(200)
+              - column:
+                  name: codice_azienda
+                  type: VARCHAR(50)
+              - column:
+                  name: codice_struttura
+                  type: VARCHAR(50)
+              - column:
+                  name: denominazione_struttura
+                  type: VARCHAR(500)
+              - column:
+                  name: indirizzo
+                  type: VARCHAR(500)
+              - column:
+                  name: codice_comune
+                  type: VARCHAR(50)
+              - column:
+                  name: comune
+                  type: VARCHAR(200)
+              - column:
+                  name: sigla_provincia
+                  type: VARCHAR(20)
+              - column:
+                  name: codice_tipo_struttura
+                  type: VARCHAR(50)
+              - column:
+                  name: descrizione_tipo_struttura
+                  type: VARCHAR(500)
+        - loadData:
+            file: classpath:AO, AOU e IRCCS pubblici_2010-2022.csv
+            relativeToChangelogFile: false
+            encoding: UTF-8
+            separator: ';'
+            tableName: structures_staging
+            columns:
+              - column:
+                  header: ANNO
+                  name: anno
+              - column:
+                  header: Codice Regione
+                  name: codice_regione
+              - column:
+                  header: Descrizione Regione
+                  name: descrizione_regione
+              - column:
+                  header: Codice Azienda
+                  name: codice_azienda
+              - column:
+                  header: Codice struttura
+                  name: codice_struttura
+              - column:
+                  header: Denominazione struttura
+                  name: denominazione_struttura
+              - column:
+                  header: Indirizzo
+                  name: indirizzo
+              - column:
+                  header: Codice Comune
+                  name: codice_comune
+              - column:
+                  header: Comune
+                  name: comune
+              - column:
+                  header: Sigla provincia
+                  name: sigla_provincia
+              - column:
+                  header: Codice tipo struttura
+                  name: codice_tipo_struttura
+              - column:
+                  header: Descrizione tipo struttura
+                  name: descrizione_tipo_struttura
+        - sql:
+            splitStatements: false
+            endDelimiter: ";"
+            sql: |
+              INSERT INTO structure_types (code, description)
+              SELECT DISTINCT TRIM(s.codice_tipo_struttura), TRIM(s.descrizione_tipo_struttura)
+              FROM structures_staging s
+              WHERE TRIM(s.codice_tipo_struttura) IS NOT NULL
+              AND TRIM(s.descrizione_tipo_struttura) IS NOT NULL
+              ON DUPLICATE KEY UPDATE description = VALUES(description);
+        - sql:
+            splitStatements: false
+            endDelimiter: ";"
+            sql: |
+              INSERT INTO structures (
+                codice_regione,
+                codice_azienda,
+                codice_struttura,
+                denominazione_struttura,
+                indirizzo,
+                codice_comune,
+                comune,
+                sigla_provincia,
+                structure_type_code
+              )
+              SELECT
+                TRIM(s.codice_regione),
+                TRIM(s.codice_azienda),
+                TRIM(s.codice_struttura),
+                TRIM(s.denominazione_struttura),
+                TRIM(s.indirizzo),
+                TRIM(s.codice_comune),
+                TRIM(s.comune),
+                TRIM(s.sigla_provincia),
+                TRIM(s.codice_tipo_struttura)
+              FROM (
+                SELECT s.*, ROW_NUMBER() OVER (
+                  PARTITION BY s.codice_regione, s.codice_azienda, s.codice_struttura
+                  ORDER BY CAST(s.anno AS UNSIGNED) DESC
+                ) rn
+                FROM structures_staging s
+              ) s
+              WHERE s.rn = 1
+              ON DUPLICATE KEY UPDATE
+                denominazione_struttura = VALUES(denominazione_struttura),
+                indirizzo = VALUES(indirizzo),
+                codice_comune = VALUES(codice_comune),
+                comune = VALUES(comune),
+                sigla_provincia = VALUES(sigla_provincia),
+                structure_type_code = VALUES(structure_type_code);
+        - sql:
+            splitStatements: false
+            endDelimiter: ";"
+            sql: |
+              DROP TABLE IF EXISTS structures_staging;

@@ -1,0 +1,862 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260614-01-create-departments-and-insert-data
+      author: copilot
+      preConditions:
+        - onFail: MARK_RAN
+          onError: HALT
+          not:
+            tableExists:
+              tableName: departments
+      changes:
+        - createTable:
+            tableName: departments
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: area_funzionale
+                  type: VARCHAR(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: reparto
+                  type: VARCHAR(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: main_responsibilities
+                  type: TEXT
+              - column:
+                  name: example_symptoms
+                  type: TEXT
+              - column:
+                  name: emergenza_urgenza
+                  type: BOOLEAN
+              - column:
+                  name: notes
+                  type: TEXT
+              - column:
+                  name: created_at
+                  type: DATETIME
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: DATETIME
+                  constraints:
+                    nullable: false
+
+        - addNotNullConstraint:
+            tableName: departments
+            columnName: created_at
+            columnDataType: DATETIME
+        - addNotNullConstraint:
+            tableName: departments
+            columnName: updated_at
+            columnDataType: DATETIME
+
+        - insert:
+            tableName: departments
+            columns:
+              - column:
+                  name: area_funzionale
+                  value: "Emergenza e Urgenza"
+              - column:
+                  name: reparto
+                  value: "Pronto Soccorso (PS)"
+              - column:
+                  name: main_responsibilities
+                  value: "Accettazione, triage e primo trattamento delle urgenze"
+              - column:
+                  name: example_symptoms
+                  value: "Traumi gravi, forti dolori improvvisi, difficoltà respiratorie acute, arresto cardiaco"
+              - column:
+                  name: emergenza_urgenza
+                  valueBoolean: true
+              - column:
+                  name: created_at
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  valueComputed: CURRENT_TIMESTAMP
+
+        - insert:
+            tableName: departments
+            columns:
+              - column:
+                  name: area_funzionale
+                  value: "Emergenza e Urgenza"
+              - column:
+                  name: reparto
+                  value: "Terapia Intensiva / Rianimazione"
+              - column:
+                  name: main_responsibilities
+                  value: "Monitoraggio continuo delle funzioni vitali compromesse"
+              - column:
+                  name: example_symptoms
+                  value: "Shock, insufficienza d'organo grave, post-operatorio complesso, coma"
+              - column:
+                  name: emergenza_urgenza
+                  valueBoolean: true
+              - column:
+                  name: created_at
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  valueComputed: CURRENT_TIMESTAMP
+
+        - insert:
+            tableName: departments
+            columns:
+              - column:
+                  name: area_funzionale
+                  value: "Emergenza e Urgenza"
+              - column:
+                  name: reparto
+                  value: "Unità Coronarica (UTIC)"
+              - column:
+                  name: main_responsibilities
+                  value: "Terapia intensiva cardiologica"
+              - column:
+                  name: example_symptoms
+                  value: "Infarto acuto del miocardio, aritmie ventricolari pericolose"
+              - column:
+                  name: emergenza_urgenza
+                  valueBoolean: true
+              - column:
+                  name: created_at
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  valueComputed: CURRENT_TIMESTAMP
+
+        - insert:
+            tableName: departments
+            columns:
+              - column:
+                  name: area_funzionale
+                  value: "Area Medica"
+              - column:
+                  name: reparto
+                  value: "Medicina Generale / Interna"
+              - column:
+                  name: main_responsibilities
+                  value: "Visione globale del paziente e patologie non chirurgiche"
+              - column:
+                  name: example_symptoms
+                  value: "Malattie croniche riacutizzate, febbri di origine ignota, polipatologie"
+              - column:
+                  name: emergenza_urgenza
+                  valueBoolean: false
+              - column:
+                  name: created_at
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  valueComputed: CURRENT_TIMESTAMP
+
+        - insert:
+            tableName: departments
+            columns:
+              - column:
+                  name: area_funzionale
+                  value: "Area Medica"
+              - column:
+                  name: reparto
+                  value: "Cardiologia"
+              - column:
+                  name: main_responsibilities
+                  value: "Malattie del cuore e dei vasi sanguigni"
+              - column:
+                  name: example_symptoms
+                  value: "Scompenso cardiaco, ipertensione arteriosa grave, cardiopatia ischemica"
+              - column:
+                  name: emergenza_urgenza
+                  valueBoolean: false
+              - column:
+                  name: created_at
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  valueComputed: CURRENT_TIMESTAMP
+
+        - insert:
+            tableName: departments
+            columns:
+              - column:
+                  name: area_funzionale
+                  value: "Area Medica"
+              - column:
+                  name: reparto
+                  value: "Neurologia"
+              - column:
+                  name: main_responsibilities
+                  value: "Sistema nervoso centrale e periferico"
+              - column:
+                  name: example_symptoms
+                  value: "Ictus, epilessia, sclerosi multipla, morbo di Parkinson, cefalee croniche"
+              - column:
+                  name: emergenza_urgenza
+                  valueBoolean: false
+              - column:
+                  name: created_at
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  valueComputed: CURRENT_TIMESTAMP
+
+        - insert:
+            tableName: departments
+            columns:
+              - column:
+                  name: area_funzionale
+                  value: "Area Medica"
+              - column:
+                  name: reparto
+                  value: "Oncologia"
+              - column:
+                  name: main_responsibilities
+                  value: "Diagnosi e trattamenti medici dei tumori"
+              - column:
+                  name: example_symptoms
+                  value: "Gestione di chemioterapia, immunoterapia, terapie biologiche"
+              - column:
+                  name: emergenza_urgenza
+                  valueBoolean: false
+              - column:
+                  name: created_at
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  valueComputed: CURRENT_TIMESTAMP
+
+        - insert:
+            tableName: departments
+            columns:
+              - column:
+                  name: area_funzionale
+                  value: "Area Medica"
+              - column:
+                  name: reparto
+                  value: "Gastroenterologia"
+              - column:
+                  name: main_responsibilities
+                  value: "Apparato digerente, fegato e pancreas"
+              - column:
+                  name: example_symptoms
+                  value: "Ulcere, reflusso gastroesofageo cronico, colite ulcerosa, cirrosi epatica"
+              - column:
+                  name: emergenza_urgenza
+                  valueBoolean: false
+              - column:
+                  name: created_at
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  valueComputed: CURRENT_TIMESTAMP
+
+        - insert:
+            tableName: departments
+            columns:
+              - column:
+                  name: area_funzionale
+                  value: "Area Medica"
+              - column:
+                  name: reparto
+                  value: "Pneumologia"
+              - column:
+                  name: main_responsibilities
+                  value: "Malattie dell'apparato respiratorio"
+              - column:
+                  name: example_symptoms
+                  value: "Asma, bronchite cronica (BPCO), polmoniti, apnee notturne"
+              - column:
+                  name: emergenza_urgenza
+                  valueBoolean: false
+              - column:
+                  name: created_at
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  valueComputed: CURRENT_TIMESTAMP
+
+        - insert:
+            tableName: departments
+            columns:
+              - column:
+                  name: area_funzionale
+                  value: "Area Medica"
+              - column:
+                  name: reparto
+                  value: "Pediatria"
+              - column:
+                  name: main_responsibilities
+                  value: "Salute medica dei neonati, bambini e adolescenti"
+              - column:
+                  name: example_symptoms
+                  value: "Infezioni acute nei minori, disturbi dello sviluppo, patologie pediatriche"
+              - column:
+                  name: emergenza_urgenza
+                  valueBoolean: false
+              - column:
+                  name: created_at
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  valueComputed: CURRENT_TIMESTAMP
+
+        - insert:
+            tableName: departments
+            columns:
+              - column:
+                  name: area_funzionale
+                  value: "Area Medica"
+              - column:
+                  name: reparto
+                  value: "Geriatria"
+              - column:
+                  name: main_responsibilities
+                  value: "Patologie e problematiche tipiche dell'età anziana"
+              - column:
+                  name: example_symptoms
+                  value: "Demenze, declino cognitivo, fragilità fisica e cognitiva dell'anziano"
+              - column:
+                  name: emergenza_urgenza
+                  valueBoolean: false
+              - column:
+                  name: created_at
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  valueComputed: CURRENT_TIMESTAMP
+
+        - insert:
+            tableName: departments
+            columns:
+              - column:
+                  name: area_funzionale
+                  value: "Area Medica"
+              - column:
+                  name: reparto
+                  value: "Nefrologia"
+              - column:
+                  name: main_responsibilities
+                  value: "Malattie dei reni e gestione della dialisi"
+              - column:
+                  name: example_symptoms
+                  value: "Insufficienza renale cronica o acuta, glomerulonefriti"
+              - column:
+                  name: emergenza_urgenza
+                  valueBoolean: false
+              - column:
+                  name: created_at
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  valueComputed: CURRENT_TIMESTAMP
+
+        - insert:
+            tableName: departments
+            columns:
+              - column:
+                  name: area_funzionale
+                  value: "Area Medica"
+              - column:
+                  name: reparto
+                  value: "Ematologia"
+              - column:
+                  name: main_responsibilities
+                  value: "Malattie del sangue e degli organi emopoietici"
+              - column:
+                  name: example_symptoms
+                  value: "Leucemie, linfomi, anemie gravi, difetti di coagulazione"
+              - column:
+                  name: emergenza_urgenza
+                  valueBoolean: false
+              - column:
+                  name: created_at
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  valueComputed: CURRENT_TIMESTAMP
+
+        - insert:
+            tableName: departments
+            columns:
+              - column:
+                  name: area_funzionale
+                  value: "Area Medica"
+              - column:
+                  name: reparto
+                  value: "Dermatologia"
+              - column:
+                  name: main_responsibilities
+                  value: "Patologie della pelle, unghie e capelli"
+              - column:
+                  name: example_symptoms
+                  value: "Melanomi, psoriasi grave, dermatiti complesse"
+              - column:
+                  name: emergenza_urgenza
+                  valueBoolean: false
+              - column:
+                  name: created_at
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  valueComputed: CURRENT_TIMESTAMP
+
+        - insert:
+            tableName: departments
+            columns:
+              - column:
+                  name: area_funzionale
+                  value: "Area Medica"
+              - column:
+                  name: reparto
+                  value: "Malattie Infettive"
+              - column:
+                  name: main_responsibilities
+                  value: "Patologie causate da agenti infettivi"
+              - column:
+                  name: example_symptoms
+                  value: "HIV/AIDS, epatiti virali, meningiti, infezioni resistenti agli antibiotici"
+              - column:
+                  name: emergenza_urgenza
+                  valueBoolean: false
+              - column:
+                  name: created_at
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  valueComputed: CURRENT_TIMESTAMP
+
+        - insert:
+            tableName: departments
+            columns:
+              - column:
+                  name: area_funzionale
+                  value: "Area Chirurgica"
+              - column:
+                  name: reparto
+                  value: "Chirurgia Generale"
+              - column:
+                  name: main_responsibilities
+                  value: "Interventi sugli organi addominali e tessuti molli"
+              - column:
+                  name: example_symptoms
+                  value: "Appendicite, calcoli alla cistifellea, ernie inguinali, tumori del colon"
+              - column:
+                  name: emergenza_urgenza
+                  valueBoolean: false
+              - column:
+                  name: created_at
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  valueComputed: CURRENT_TIMESTAMP
+
+        - insert:
+            tableName: departments
+            columns:
+              - column:
+                  name: area_funzionale
+                  value: "Area Chirurgica"
+              - column:
+                  name: reparto
+                  value: "Ortopedia e Traumatologia"
+              - column:
+                  name: main_responsibilities
+                  value: "Ossa, articolazioni, muscoli e tendini"
+              - column:
+                  name: example_symptoms
+                  value: "Fratture, lussazioni, artrosi grave (protesi), rotture di legamenti"
+              - column:
+                  name: emergenza_urgenza
+                  valueBoolean: false
+              - column:
+                  name: created_at
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  valueComputed: CURRENT_TIMESTAMP
+
+        - insert:
+            tableName: departments
+            columns:
+              - column:
+                  name: area_funzionale
+                  value: "Area Chirurgica"
+              - column:
+                  name: reparto
+                  value: "Ostetricia e Ginecologia"
+              - column:
+                  name: main_responsibilities
+                  value: "Gravidanza, parto e apparato riproduttivo femminile"
+              - column:
+                  name: example_symptoms
+                  value: "Assistenza al parto, cisti ovariche, fibromi uteri, monitoraggio gravidanza"
+              - column:
+                  name: emergenza_urgenza
+                  valueBoolean: false
+              - column:
+                  name: created_at
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  valueComputed: CURRENT_TIMESTAMP
+
+        - insert:
+            tableName: departments
+            columns:
+              - column:
+                  name: area_funzionale
+                  value: "Area Chirurgica"
+              - column:
+                  name: reparto
+                  value: "Urologia"
+              - column:
+                  name: main_responsibilities
+                  value: "Apparato urinario e apparato genitale maschile"
+              - column:
+                  name: example_symptoms
+                  value: "Calcoli renali, ipertrofia prostatica benigna, tumori della vescica"
+              - column:
+                  name: emergenza_urgenza
+                  valueBoolean: false
+              - column:
+                  name: created_at
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  valueComputed: CURRENT_TIMESTAMP
+
+        - insert:
+            tableName: departments
+            columns:
+              - column:
+                  name: area_funzionale
+                  value: "Area Chirurgica"
+              - column:
+                  name: reparto
+                  value: "Otorinolaringoiatria (ORL)"
+              - column:
+                  name: main_responsibilities
+                  value: "Patologie di orecchio, naso, gola e base cranio"
+              - column:
+                  name: example_symptoms
+                  value: "Tonsilliti croniche, deviazione setto nasale, otiti medie, vertigini"
+              - column:
+                  name: emergenza_urgenza
+                  valueBoolean: false
+              - column:
+                  name: created_at
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  valueComputed: CURRENT_TIMESTAMP
+
+        - insert:
+            tableName: departments
+            columns:
+              - column:
+                  name: area_funzionale
+                  value: "Area Chirurgica"
+              - column:
+                  name: reparto
+                  value: "Oftalmologia (Oculistica)"
+              - column:
+                  name: main_responsibilities
+                  value: "Chirurgia e cura degli occhi"
+              - column:
+                  name: example_symptoms
+                  value: "Cataratta, glaucoma, distacco di retina, vizi refrattivi gravi"
+              - column:
+                  name: emergenza_urgenza
+                  valueBoolean: false
+              - column:
+                  name: created_at
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  valueComputed: CURRENT_TIMESTAMP
+
+        - insert:
+            tableName: departments
+            columns:
+              - column:
+                  name: area_funzionale
+                  value: "Area Chirurgica"
+              - column:
+                  name: reparto
+                  value: "Neurochirurgia"
+              - column:
+                  name: main_responsibilities
+                  value: "Interventi chirurgici sul sistema nervoso"
+              - column:
+                  name: example_symptoms
+                  value: "Tumori cerebrali, aneurismi, ernie del disco lombari e cervicali"
+              - column:
+                  name: emergenza_urgenza
+                  valueBoolean: false
+              - column:
+                  name: created_at
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  valueComputed: CURRENT_TIMESTAMP
+
+        - insert:
+            tableName: departments
+            columns:
+              - column:
+                  name: area_funzionale
+                  value: "Area Chirurgica"
+              - column:
+                  name: reparto
+                  value: "Chirurgia Vascolare"
+              - column:
+                  name: main_responsibilities
+                  value: "Interventi su arterie e vene"
+              - column:
+                  name: example_symptoms
+                  value: "Aneurismi dell'aorta, vene varicose gravi, stenosi carotidea"
+              - column:
+                  name: emergenza_urgenza
+                  valueBoolean: false
+              - column:
+                  name: created_at
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  valueComputed: CURRENT_TIMESTAMP
+
+        - insert:
+            tableName: departments
+            columns:
+              - column:
+                  name: area_funzionale
+                  value: "Area Chirurgica"
+              - column:
+                  name: reparto
+                  value: "Cardiochirurgia"
+              - column:
+                  name: main_responsibilities
+                  value: "Interventi chirurgici sul cuore e grandi vasi"
+              - column:
+                  name: example_symptoms
+                  value: "Bypass aorto-coronarico, sostituzione o riparazione di valvole cardiache"
+              - column:
+                  name: emergenza_urgenza
+                  valueBoolean: false
+              - column:
+                  name: created_at
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  valueComputed: CURRENT_TIMESTAMP
+
+        - insert:
+            tableName: departments
+            columns:
+              - column:
+                  name: area_funzionale
+                  value: "Area Chirurgica"
+              - column:
+                  name: reparto
+                  value: "Chirurgia Plastica e Ricostruttiva"
+              - column:
+                  name: main_responsibilities
+                  value: "Ripristino morfologico e funzionale dei tessuti"
+              - column:
+                  name: example_symptoms
+                  value: "Ricostruzione post-oncologica (es. mammella), esiti di gravi ustioni"
+              - column:
+                  name: emergenza_urgenza
+                  valueBoolean: false
+              - column:
+                  name: created_at
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  valueComputed: CURRENT_TIMESTAMP
+
+        - insert:
+            tableName: departments
+            columns:
+              - column:
+                  name: area_funzionale
+                  value: "Servizi di Diagnosi e Supporto"
+              - column:
+                  name: reparto
+                  value: "Radiologia"
+              - column:
+                  name: main_responsibilities
+                  value: "Diagnostica per immagini"
+              - column:
+                  name: example_symptoms
+                  value: "Esecuzione e refertazione di TAC, Risonanze (RMN), RX ed Ecografie"
+              - column:
+                  name: emergenza_urgenza
+                  valueBoolean: false
+              - column:
+                  name: created_at
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  valueComputed: CURRENT_TIMESTAMP
+
+        - insert:
+            tableName: departments
+            columns:
+              - column:
+                  name: area_funzionale
+                  value: "Servizi di Diagnosi e Supporto"
+              - column:
+                  name: reparto
+                  value: "Laboratorio Analisi"
+              - column:
+                  name: main_responsibilities
+                  value: "Analisi chimico-cliniche e microbiologiche"
+              - column:
+                  name: example_symptoms
+                  value: "Esami del sangue, delle urine, tamponi, colture batteriche"
+              - column:
+                  name: emergenza_urgenza
+                  valueBoolean: false
+              - column:
+                  name: created_at
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  valueComputed: CURRENT_TIMESTAMP
+
+        - insert:
+            tableName: departments
+            columns:
+              - column:
+                  name: area_funzionale
+                  value: "Servizi di Diagnosi e Supporto"
+              - column:
+                  name: reparto
+                  value: "Anatomia Patologica"
+              - column:
+                  name: main_responsibilities
+                  value: "Studio microscopico dei tessuti"
+              - column:
+                  name: example_symptoms
+                  value: "Esami istologici su biopsie e pezzi chirurgici per diagnosi oncologiche"
+              - column:
+                  name: emergenza_urgenza
+                  valueBoolean: false
+              - column:
+                  name: created_at
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  valueComputed: CURRENT_TIMESTAMP
+
+        - insert:
+            tableName: departments
+            columns:
+              - column:
+                  name: area_funzionale
+                  value: "Servizi di Diagnosi e Supporto"
+              - column:
+                  name: reparto
+                  value: "Centro Trasfusionale"
+              - column:
+                  name: main_responsibilities
+                  value: "Raccolta e gestione del sangue"
+              - column:
+                  name: example_symptoms
+                  value: "Donazioni di sangue, preparazione di sacche per trasfusioni e plasmaferesi"
+              - column:
+                  name: emergenza_urgenza
+                  valueBoolean: false
+              - column:
+                  name: created_at
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  valueComputed: CURRENT_TIMESTAMP
+
+        - insert:
+            tableName: departments
+            columns:
+              - column:
+                  name: area_funzionale
+                  value: "Servizi di Diagnosi e Supporto"
+              - column:
+                  name: reparto
+                  value: "Farmacia Ospedaliera"
+              - column:
+                  name: main_responsibilities
+                  value: "Gestione dei farmaci e galenica clinica"
+              - column:
+                  name: example_symptoms
+                  value: "Approvvigionamento medicinali, preparazione di sacche chemioterapiche"
+              - column:
+                  name: emergenza_urgenza
+                  valueBoolean: false
+              - column:
+                  name: created_at
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  valueComputed: CURRENT_TIMESTAMP
+
+        - insert:
+            tableName: departments
+            columns:
+              - column:
+                  name: area_funzionale
+                  value: "Riabilitazione e Lungodegenza"
+              - column:
+                  name: reparto
+                  value: "Medicina Riabilitativa (Fisiatria)"
+              - column:
+                  name: main_responsibilities
+                  value: "Recupero delle funzioni motorie o neurologiche"
+              - column:
+                  name: example_symptoms
+                  value: "Riabilitazione post-ictus, post-intervento ortopedico o grave trauma"
+              - column:
+                  name: emergenza_urgenza
+                  valueBoolean: false
+              - column:
+                  name: created_at
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  valueComputed: CURRENT_TIMESTAMP
+
+        - insert:
+            tableName: departments
+            columns:
+              - column:
+                  name: area_funzionale
+                  value: "Riabilitazione e Lungodegenza"
+              - column:
+                  name: reparto
+                  value: "Lungodegenza"
+              - column:
+                  name: main_responsibilities
+                  value: "Cure prolungate e stabilizzazione clinica"
+              - column:
+                  name: example_symptoms
+                  value: "Convalescenza guidata dopo interventi complessi in pazienti fragili"
+              - column:
+                  name: emergenza_urgenza
+                  valueBoolean: false
+              - column:
+                  name: created_at
+                  valueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  valueComputed: CURRENT_TIMESTAMP

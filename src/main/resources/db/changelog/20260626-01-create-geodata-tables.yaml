@@ -1,0 +1,114 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260626-01-create-geodata-tables
+      author: copilot
+      preConditions:
+        - onFail: MARK_RAN
+          onError: HALT
+          not:
+            tableExists:
+              tableName: regions
+      changes:
+        - createTable:
+            tableName: regions
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: code
+                  type: VARCHAR(10)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: name
+                  type: VARCHAR(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: geographic_area
+                  type: VARCHAR(100)
+              - column:
+                  name: region_type
+                  type: VARCHAR(100)
+        - createTable:
+            tableName: provinces
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: code
+                  type: VARCHAR(10)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: name
+                  type: VARCHAR(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: sigla
+                  type: VARCHAR(10)
+              - column:
+                  name: region_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: cities
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: code
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: istat_code
+                  type: VARCHAR(20)
+              - column:
+                  name: catastale_code
+                  type: VARCHAR(20)
+              - column:
+                  name: name
+                  type: VARCHAR(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_capoluogo
+                  type: BOOLEAN
+              - column:
+                  name: province_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            baseTableName: provinces
+            baseColumnNames: region_id
+            referencedTableName: regions
+            referencedColumnNames: id
+            constraintName: fk_provinces_region
+        - addForeignKeyConstraint:
+            baseTableName: cities
+            baseColumnNames: province_id
+            referencedTableName: provinces
+            referencedColumnNames: id
+            constraintName: fk_cities_province

@@ -1,0 +1,201 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260627-04-load-disciplines-and-structure-departments
+      author: copilot
+      runAlways: true
+      preConditions:
+        - onFail: HALT
+          onError: HALT
+          tableExists:
+            tableName: structure_departments
+      changes:
+        - sql:
+            splitStatements: false
+            endDelimiter: ";"
+            sql: |
+              DROP TABLE IF EXISTS structure_departments_staging;
+        - createTable:
+            tableName: structure_departments_staging
+            columns:
+              - column:
+                  name: anno
+                  type: VARCHAR(10)
+              - column:
+                  name: codice_regione
+                  type: VARCHAR(10)
+              - column:
+                  name: regione
+                  type: VARCHAR(200)
+              - column:
+                  name: codice_asl
+                  type: VARCHAR(50)
+              - column:
+                  name: asl
+                  type: VARCHAR(200)
+              - column:
+                  name: codice_struttura
+                  type: VARCHAR(50)
+              - column:
+                  name: struttura
+                  type: VARCHAR(500)
+              - column:
+                  name: indirizzo
+                  type: VARCHAR(500)
+              - column:
+                  name: codice_tipo_struttura
+                  type: VARCHAR(50)
+              - column:
+                  name: sottotipo_struttura
+                  type: VARCHAR(200)
+              - column:
+                  name: tipo_struttura
+                  type: VARCHAR(200)
+              - column:
+                  name: comune
+                  type: VARCHAR(200)
+              - column:
+                  name: sigla_provincia
+                  type: VARCHAR(20)
+              - column:
+                  name: codice_disciplina
+                  type: VARCHAR(20)
+              - column:
+                  name: disciplina
+                  type: VARCHAR(200)
+              - column:
+                  name: posti_letto_day_hospital
+                  type: VARCHAR(50)
+              - column:
+                  name: posti_letto_day_surgery
+                  type: VARCHAR(50)
+              - column:
+                  name: posti_letto_degenza_ordinaria
+                  type: VARCHAR(50)
+              - column:
+                  name: posti_letto_utilizzati
+                  type: VARCHAR(50)
+              - column:
+                  name: num_dimessi
+                  type: VARCHAR(50)
+              - column:
+                  name: giornate_degenza
+                  type: VARCHAR(50)
+              - column:
+                  name: giornate_disponibili
+                  type: VARCHAR(50)
+              - column:
+                  name: degenza_media_ordinaria
+                  type: VARCHAR(50)
+              - column:
+                  name: icm
+                  type: VARCHAR(50)
+              - column:
+                  name: tasso_utilizzo
+                  type: VARCHAR(50)
+        - loadData:
+            file: classpath:Dati_di_anagrafe_e_di_attività_delle_Strutture_di_Ricovero_Pubbliche_ed_equiparate.csv
+            relativeToChangelogFile: false
+            encoding: UTF-8
+            separator: ';'
+            tableName: structure_departments_staging
+            columns:
+              - column:
+                  header: anno
+                  name: anno
+              - column:
+                  header: codice_regione
+                  name: codice_regione
+              - column:
+                  header: regione
+                  name: regione
+              - column:
+                  header: codice_asl
+                  name: codice_asl
+              - column:
+                  header: asl
+                  name: asl
+              - column:
+                  header: codice_struttura
+                  name: codice_struttura
+              - column:
+                  header: struttura
+                  name: struttura
+              - column:
+                  header: indirizzo
+                  name: indirizzo
+              - column:
+                  header: codice_tipo_struttura
+                  name: codice_tipo_struttura
+              - column:
+                  header: sottotipo_struttura
+                  name: sottotipo_struttura
+              - column:
+                  header: tipo_struttura
+                  name: tipo_struttura
+              - column:
+                  header: comune
+                  name: comune
+              - column:
+                  header: sigla_provincia
+                  name: sigla_provincia
+              - column:
+                  header: codice_disciplina
+                  name: codice_disciplina
+              - column:
+                  header: disciplina
+                  name: disciplina
+              - column:
+                  header: posti_letto_day_hospital
+                  name: posti_letto_day_hospital
+              - column:
+                  header: posti_letto_day_surgery
+                  name: posti_letto_day_surgery
+              - column:
+                  header: posti_letto_degenza_ordinaria
+                  name: posti_letto_degenza_ordinaria
+              - column:
+                  header: posti_letto_utilizzati
+                  name: posti_letto_utilizzati
+              - column:
+                  header: num_dimessi
+                  name: num_dimessi
+              - column:
+                  header: giornate_degenza
+                  name: giornate_degenza
+              - column:
+                  header: giornate_disponibili
+                  name: giornate_disponibili
+              - column:
+                  header: degenza_media_ordinaria
+                  name: degenza_media_ordinaria
+              - column:
+                  header: icm
+                  name: icm
+              - column:
+                  header: tasso_utilizzo
+                  name: tasso_utilizzo
+        - sql:
+            splitStatements: false
+            endDelimiter: ";"
+            sql: |
+              INSERT INTO discipline (codice_disciplina, disciplina)
+              SELECT DISTINCT TRIM(s.codice_disciplina), TRIM(s.disciplina)
+              FROM structure_departments_staging s
+              WHERE TRIM(s.codice_disciplina) IS NOT NULL
+              AND TRIM(s.disciplina) IS NOT NULL
+              ON DUPLICATE KEY UPDATE disciplina = VALUES(disciplina);
+        - sql:
+            splitStatements: false
+            endDelimiter: ";"
+            sql: |
+              INSERT INTO structure_departments (codice_struttura, codice_disciplina, indirizzo)
+              SELECT DISTINCT TRIM(s.codice_struttura), TRIM(s.codice_disciplina), TRIM(s.indirizzo)
+              FROM structure_departments_staging s
+              WHERE TRIM(s.codice_struttura) IS NOT NULL
+              AND TRIM(s.codice_disciplina) IS NOT NULL
+              ON DUPLICATE KEY UPDATE indirizzo = VALUES(indirizzo);
+        - sql:
+            splitStatements: false
+            endDelimiter: ";"
+            sql: |
+              DROP TABLE IF EXISTS structure_departments_staging;

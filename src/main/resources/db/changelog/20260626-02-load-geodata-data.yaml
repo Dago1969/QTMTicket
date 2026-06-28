@@ -1,0 +1,154 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260626-02-load-geodata-data
+      author: copilot
+      runOnChange: true
+      preConditions:
+        - onFail: HALT
+          onError: HALT
+          tableExists:
+            tableName: regions
+      changes:
+        - dropTable:
+            tableName: italian_comuni_staging
+            ifExists: true
+            cascadeConstraints: true
+        - createTable:
+            tableName: italian_comuni_staging
+            columns:
+              - column:
+                  name: codice_regione
+                  type: VARCHAR(10)
+              - column:
+                  name: codice_unita_territoriale
+                  type: VARCHAR(50)
+              - column:
+                  name: codice_provincia_storico
+                  type: VARCHAR(10)
+              - column:
+                  name: progressivo_comune
+                  type: VARCHAR(20)
+              - column:
+                  name: codice_comune_alfanumerico
+                  type: VARCHAR(20)
+              - column:
+                  name: denominazione
+                  type: VARCHAR(200)
+              - column:
+                  name: denominazione_italiana
+                  type: VARCHAR(200)
+              - column:
+                  name: denominazione_altra_lingua
+                  type: VARCHAR(200)
+              - column:
+                  name: codice_ripartizione_geografica
+                  type: VARCHAR(50)
+              - column:
+                  name: ripartizione_geografica
+                  type: VARCHAR(100)
+              - column:
+                  name: denominazione_regione
+                  type: VARCHAR(200)
+              - column:
+                  name: denominazione_unita_territoriale
+                  type: VARCHAR(200)
+              - column:
+                  name: tipologia_unita_territoriale
+                  type: VARCHAR(100)
+              - column:
+                  name: flag_comune_capoluogo
+                  type: VARCHAR(10)
+              - column:
+                  name: sigla
+                  type: VARCHAR(10)
+              - column:
+                  name: codice_comune_numerico
+                  type: VARCHAR(20)
+              - column:
+                  name: codice_comune_numerico_110
+                  type: VARCHAR(20)
+              - column:
+                  name: codice_comune_numerico_107
+                  type: VARCHAR(20)
+              - column:
+                  name: codice_comune_numerico_103
+                  type: VARCHAR(20)
+              - column:
+                  name: codice_catastale_comune
+                  type: VARCHAR(20)
+              - column:
+                  name: codice_nuts1_2021
+                  type: VARCHAR(20)
+              - column:
+                  name: codice_nuts2_2021
+                  type: VARCHAR(20)
+              - column:
+                  name: codice_nuts3_2021
+                  type: VARCHAR(20)
+              - column:
+                  name: codice_nuts1_2024
+                  type: VARCHAR(20)
+              - column:
+                  name: codice_nuts2_2024
+                  type: VARCHAR(20)
+              - column:
+                  name: codice_nuts3_2024
+                  type: VARCHAR(20)
+        - loadData:
+            file: classpath:db/changelog/geodata-cleaned.csv
+            relativeToChangelogFile: false
+            encoding: UTF-8
+            separator: ';'
+            tableName: italian_comuni_staging
+            columns:
+              - column: {name: codice_regione}
+              - column: {name: codice_unita_territoriale}
+              - column: {name: codice_provincia_storico}
+              - column: {name: progressivo_comune}
+              - column: {name: codice_comune_alfanumerico}
+              - column: {name: denominazione}
+              - column: {name: denominazione_italiana}
+              - column: {name: denominazione_altra_lingua}
+              - column: {name: codice_ripartizione_geografica}
+              - column: {name: ripartizione_geografica}
+              - column: {name: denominazione_regione}
+              - column: {name: denominazione_unita_territoriale}
+              - column: {name: tipologia_unita_territoriale}
+              - column: {name: flag_comune_capoluogo}
+              - column: {name: sigla}
+              - column: {name: codice_comune_numerico}
+              - column: {name: codice_comune_numerico_110}
+              - column: {name: codice_comune_numerico_107}
+              - column: {name: codice_comune_numerico_103}
+              - column: {name: codice_catastale_comune}
+              - column: {name: codice_nuts1_2021}
+              - column: {name: codice_nuts2_2021}
+              - column: {name: codice_nuts3_2021}
+              - column: {name: codice_nuts1_2024}
+              - column: {name: codice_nuts2_2024}
+              - column: {name: codice_nuts3_2024}
+        - sql:
+            splitStatements: false
+            endDelimiter: ";"
+            sql: |
+              INSERT IGNORE INTO regions (code, name, geographic_area, region_type)
+              SELECT DISTINCT codice_regione, denominazione_regione, ripartizione_geografica, tipologia_unita_territoriale
+              FROM italian_comuni_staging;
+        - sql:
+            splitStatements: false
+            endDelimiter: ";"
+            sql: |
+              INSERT IGNORE INTO provinces (code, name, sigla, region_id)
+              SELECT DISTINCT codice_provincia_storico, denominazione_unita_territoriale, sigla, r.id
+              FROM italian_comuni_staging s
+              JOIN regions r ON r.code = s.codice_regione;
+        - sql:
+            splitStatements: false
+            endDelimiter: ";"
+            sql: |
+              INSERT IGNORE INTO cities (code, istat_code, catastale_code, name, is_capoluogo, province_id)
+              SELECT DISTINCT codice_comune_alfanumerico, codice_comune_numerico, codice_catastale_comune, denominazione, IF(flag_comune_capoluogo = '1', TRUE, FALSE), p.id
+              FROM italian_comuni_staging s
+              JOIN provinces p ON p.code = s.codice_provincia_storico;
+        - dropTable:
+            tableName: italian_comuni_staging
