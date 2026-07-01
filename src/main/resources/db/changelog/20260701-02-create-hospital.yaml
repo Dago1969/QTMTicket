@@ -1,0 +1,63 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260701-02-create-hospital
+      author: copilot
+      preConditions:
+        - not:
+            - tableExists:
+                tableName: hospital
+      changes:
+        - createTable:
+            tableName: hospital
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: anno
+                  type: VARCHAR(10)
+              - column:
+                  name: codice_regione
+                  type: VARCHAR(10)
+              - column:
+                  name: codice_asl
+                  type: VARCHAR(50)
+              - column:
+                  name: codice_struttura
+                  type: VARCHAR(50)
+              - column:
+                  name: struttura
+                  type: VARCHAR(500)
+              - column:
+                  name: indirizzo
+                  type: VARCHAR(500)
+              - column:
+                  name: hospital_type_id
+                  type: BIGINT
+              - column:
+                  name: asl_id
+                  type: BIGINT
+        - addUniqueConstraint:
+            columnNames: codice_asl,codice_struttura
+            constraintName: uq_hospital_codice_asl_codice_struttura
+            tableName: hospital
+        - addForeignKeyConstraint:
+            baseTableName: hospital
+            baseColumnNames: hospital_type_id
+            referencedTableName: hospital_type
+            referencedColumnNames: id
+            constraintName: fk_hospital_hospital_type
+        - addForeignKeyConstraint:
+            baseTableName: hospital
+            baseColumnNames: asl_id
+            referencedTableName: asl
+            referencedColumnNames: id
+            constraintName: fk_hospital_asl
+      rollback:
+        - dropTable:
+            tableName: hospital
+            cascadeConstraints: true

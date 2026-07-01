@@ -1,5 +1,10 @@
 databaseChangeLog:
   - include:
+      file: db/changelog/20260701-01-create-hospital-type.yaml
+  - include:
+      file: db/changelog/20260701-02-create-hospital.yaml
+databaseChangeLog:
+  - include:
       file: db/changelog/20260601-01-create-tickets-table.yaml
   - include:
       file: db/changelog/20260614-01-create-departments-and-insert-data.yaml
