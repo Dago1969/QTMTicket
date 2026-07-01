@@ -15,9 +15,6 @@ public class HospitalEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "anno", length = 10)
-    private String anno;
-
     @Column(name = "codice_regione", length = 10)
     private String codiceRegione;
 

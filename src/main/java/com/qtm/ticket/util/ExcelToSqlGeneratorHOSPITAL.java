@@ -64,16 +64,19 @@ public class ExcelToSqlGeneratorHOSPITAL {
             if (header == null) return;
 
             String line;
+            // keep track of hospital_type codes already emitted to avoid duplicates
+            java.util.Set<String> emittedTypes = new java.util.HashSet<>();
+
             while ((line = br.readLine()) != null) {
                 // split su ; rispettando il formato fornito
                 String[] cols = line.split(";", -1);
                 if (cols.length < 12) continue; // riga malformata
 
-                String anno = safe(cols[0]);
+                // anno present in CSV but not stored in DB
+                // String anno = safe(cols[0]);
                 String csvCodiceRegione = safe(cols[1]);
                 String regione = safe(cols[2]);
                 String codiceAsl = safe(cols[3]);
-                String asl = safe(cols[4]);
                 String codiceStruttura = safe(cols[5]);
                 String struttura = clean(cols[6]);
                 String indirizzo = clean(cols[7]);
@@ -82,13 +85,14 @@ public class ExcelToSqlGeneratorHOSPITAL {
 
                 String codiceRegione = deriveRegionCode(csvCodiceRegione, regione);
 
-                // upsert hospital_type
-                if (!isEmpty(codiceTipoStruttura) || !isEmpty(tipoStruttura)) {
+                // upsert hospital_type — emit once per code to avoid repeated identical statements
+                if ((!isEmpty(codiceTipoStruttura) || !isEmpty(tipoStruttura)) && !emittedTypes.contains(codiceTipoStruttura)) {
                     String sqlType = String.format(
                             "INSERT INTO hospital_type (code, description) VALUES ('%s', '%s') ON DUPLICATE KEY UPDATE description = VALUES(description);\n",
                             escape(codiceTipoStruttura), escape(tipoStruttura)
                     );
                     fw.write(sqlType);
+                    emittedTypes.add(codiceTipoStruttura);
                 }
 
                 // prepare subqueries
@@ -96,18 +100,18 @@ public class ExcelToSqlGeneratorHOSPITAL {
                 String aslSub = isEmpty(codiceAsl) ? "NULL" : String.format("(SELECT id FROM asl WHERE codice_azienda = '%s' AND codice_regione = '%s')", escape(codiceAsl), escape(codiceRegione));
 
                 // upsert hospital
-                String sqlHospital2 = buildHospitalUpsert(anno, codiceRegione, codiceAsl, codiceStruttura, struttura, indirizzo, hospitalTypeSub, aslSub);
+                String sqlHospital2 = buildHospitalUpsert(codiceRegione, codiceAsl, codiceStruttura, struttura, indirizzo, hospitalTypeSub, aslSub);
                 fw.write(sqlHospital2);
             }
         }
     }
 
-    private static String buildHospitalUpsert(String anno, String codiceRegione, String codiceAsl, String codiceStruttura, String struttura, String indirizzo, String hospitalTypeSub, String aslSub) {
+    private static String buildHospitalUpsert(String codiceRegione, String codiceAsl, String codiceStruttura, String struttura, String indirizzo, String hospitalTypeSub, String aslSub) {
         String sStruttura = isEmpty(struttura) ? "NULL" : "'" + escapeForSql(struttura) + "'";
         String sIndirizzo = isEmpty(indirizzo) ? "NULL" : "'" + escape(indirizzo) + "'";
         String sql = String.format(
-                "INSERT INTO hospital (anno, codice_regione, codice_asl, codice_struttura, struttura, indirizzo, hospital_type_id, asl_id) VALUES ('%s','%s','%s','%s',%s,%s,%s,%s) ON DUPLICATE KEY UPDATE anno = VALUES(anno), codice_regione = VALUES(codice_regione), struttura = VALUES(struttura), indirizzo = VALUES(indirizzo), hospital_type_id = VALUES(hospital_type_id), asl_id = VALUES(asl_id);\n",
-                escape(anno), escape(codiceRegione), escape(codiceAsl), escape(codiceStruttura), sStruttura, sIndirizzo, hospitalTypeSub, aslSub
+                "INSERT INTO hospital (codice_regione, codice_asl, codice_struttura, struttura, indirizzo, hospital_type_id, asl_id) VALUES ('%s','%s','%s',%s,%s,%s,%s) ON DUPLICATE KEY UPDATE codice_regione = VALUES(codice_regione), struttura = VALUES(struttura), indirizzo = VALUES(indirizzo), hospital_type_id = VALUES(hospital_type_id), asl_id = VALUES(asl_id);\n",
+                escape(codiceRegione), escape(codiceAsl), escape(codiceStruttura), sStruttura, sIndirizzo, hospitalTypeSub, aslSub
         );
         return sql;
     }

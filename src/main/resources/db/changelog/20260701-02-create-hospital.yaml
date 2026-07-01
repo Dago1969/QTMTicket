@@ -9,7 +9,7 @@ databaseChangeLog:
       changes:
         - createTable:
             tableName: hospital
-            columns:
+                        columns:
               - column:
                   name: id
                   type: BIGINT
@@ -17,9 +17,6 @@ databaseChangeLog:
                   constraints:
                     primaryKey: true
                     nullable: false
-              - column:
-                  name: anno
-                  type: VARCHAR(10)
               - column:
                   name: codice_regione
                   type: VARCHAR(10)

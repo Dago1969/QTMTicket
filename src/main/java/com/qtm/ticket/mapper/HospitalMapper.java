@@ -12,9 +12,8 @@ public class HospitalMapper {
     public HospitalDto entityToDto(HospitalEntity entity) {
         if (entity == null) return null;
         return HospitalDto.builder()
-                .id(entity.getId())
-                .anno(entity.getAnno())
-                .codiceRegione(entity.getCodiceRegione())
+            .id(entity.getId())
+            .codiceRegione(entity.getCodiceRegione())
                 .codiceAsl(entity.getCodiceAsl())
                 .codiceStruttura(entity.getCodiceStruttura())
                 .struttura(entity.getStruttura())
@@ -32,9 +31,8 @@ public class HospitalMapper {
         if (dto.getAslId() != null) asl = com.qtm.ticket.entity.ASLEntity.builder().id(dto.getAslId()).build();
 
         return HospitalEntity.builder()
-                .id(dto.getId())
-                .anno(dto.getAnno())
-                .codiceRegione(dto.getCodiceRegione())
+            .id(dto.getId())
+            .codiceRegione(dto.getCodiceRegione())
                 .codiceAsl(dto.getCodiceAsl())
                 .codiceStruttura(dto.getCodiceStruttura())
                 .struttura(dto.getStruttura())
