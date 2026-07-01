@@ -9,7 +9,7 @@ databaseChangeLog:
       changes:
         - createTable:
             tableName: hospital
-                        columns:
+            columns:
               - column:
                   name: id
                   type: BIGINT
