@@ -20,6 +20,9 @@ public class HospitalMapper {
                 .indirizzo(entity.getIndirizzo())
                 .hospitalTypeId(entity.getHospitalType() != null ? entity.getHospitalType().getId() : null)
                 .aslId(entity.getAsl() != null ? entity.getAsl().getId() : null)
+                .comune(entity.getCity() != null ? entity.getCity().getName() : null)
+                .cityId(entity.getCity() != null ? entity.getCity().getId() : null)
+                .siglaProvincia(entity.getCity() != null && entity.getCity().getProvince() != null ? entity.getCity().getProvince().getSigla() : null)
                 .build();
     }
 
@@ -29,6 +32,8 @@ public class HospitalMapper {
         if (dto.getHospitalTypeId() != null) ht = HospitalTypeEntity.builder().id(dto.getHospitalTypeId()).build();
         com.qtm.ticket.entity.ASLEntity asl = null;
         if (dto.getAslId() != null) asl = com.qtm.ticket.entity.ASLEntity.builder().id(dto.getAslId()).build();
+        com.qtm.ticket.entity.CityEntity city = null;
+        if (dto.getCityId() != null) city = com.qtm.ticket.entity.CityEntity.builder().id(dto.getCityId()).build();
 
         return HospitalEntity.builder()
             .id(dto.getId())
@@ -39,6 +44,7 @@ public class HospitalMapper {
                 .indirizzo(dto.getIndirizzo())
                 .hospitalType(ht)
                 .asl(asl)
+                .city(city)
                 .build();
     }
 }

@@ -95,8 +95,8 @@ databaseChangeLog:
                   name: codice_nuts3_2024
                   type: VARCHAR(20)
         - loadData:
-            file: classpath:db/changelog/geodata-cleaned.csv
-            relativeToChangelogFile: false
+            file: geodata-cleaned.csv
+            relativeToChangelogFile: true
             encoding: UTF-8
             separator: ';'
             tableName: italian_comuni_staging

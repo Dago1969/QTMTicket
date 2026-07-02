@@ -23,3 +23,7 @@ databaseChangeLog:
       file: db/changelog/20260701-01-create-hospital-type.yaml
   - include:
       file: db/changelog/20260701-02-create-hospital.yaml
+  - include:
+      file: db/changelog/20260702-01-add-hospital-cityid.yaml
+  - include:
+      file: db/changelog/20260701-03-load-hospital-data.yaml

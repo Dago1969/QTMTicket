@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260702-01-add-hospital-cityid
+      author: copilot
+      runAlways: false
+      preConditions:
+        - onFail: MARK_RAN
+          onError: HALT
+        - tableExists:
+            tableName: hospital
+      changes:
+        - addColumn:
+            tableName: hospital
+            columns:
+              - column:
+                  name: city_id
+                  type: BIGINT
+        - addForeignKeyConstraint:
+            baseTableName: hospital
+            baseColumnNames: city_id
+            referencedTableName: cities
+            referencedColumnNames: id
+            constraintName: fk_hospital_city
+      rollback:
+        - dropForeignKeyConstraint:
+            baseTableName: hospital
+            constraintName: fk_hospital_city
+        - dropColumn:
+            columnName: city_id
+            tableName: hospital

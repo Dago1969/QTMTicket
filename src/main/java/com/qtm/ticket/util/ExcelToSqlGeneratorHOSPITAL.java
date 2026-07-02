@@ -70,7 +70,7 @@ public class ExcelToSqlGeneratorHOSPITAL {
             while ((line = br.readLine()) != null) {
                 // split su ; rispettando il formato fornito
                 String[] cols = line.split(";", -1);
-                if (cols.length < 12) continue; // riga malformata
+                if (cols.length < 13) continue; // riga malformata (ci aspettiamo anche comune e sigla_provincia)
 
                 // anno present in CSV but not stored in DB
                 // String anno = safe(cols[0]);
@@ -80,6 +80,8 @@ public class ExcelToSqlGeneratorHOSPITAL {
                 String codiceStruttura = safe(cols[5]);
                 String struttura = clean(cols[6]);
                 String indirizzo = clean(cols[7]);
+                String comune = clean(cols[11]);
+                String siglaProvincia = safe(cols[12]);
                 String codiceTipoStruttura = safe(cols[8]);
                 String tipoStruttura = clean(cols[10]);
 
@@ -100,18 +102,25 @@ public class ExcelToSqlGeneratorHOSPITAL {
                 String aslSub = isEmpty(codiceAsl) ? "NULL" : String.format("(SELECT id FROM asl WHERE codice_azienda = '%s' AND codice_regione = '%s')", escape(codiceAsl), escape(codiceRegione));
 
                 // upsert hospital
-                String sqlHospital2 = buildHospitalUpsert(codiceRegione, codiceAsl, codiceStruttura, struttura, indirizzo, hospitalTypeSub, aslSub);
+                String sqlHospital2 = buildHospitalUpsert(codiceRegione, codiceAsl, codiceStruttura, struttura, indirizzo, comune, siglaProvincia, hospitalTypeSub, aslSub);
                 fw.write(sqlHospital2);
             }
         }
     }
 
-    private static String buildHospitalUpsert(String codiceRegione, String codiceAsl, String codiceStruttura, String struttura, String indirizzo, String hospitalTypeSub, String aslSub) {
+    private static String buildHospitalUpsert(String codiceRegione, String codiceAsl, String codiceStruttura, String struttura, String indirizzo, String comune, String siglaProvincia, String hospitalTypeSub, String aslSub) {
         String sStruttura = isEmpty(struttura) ? "NULL" : "'" + escapeForSql(struttura) + "'";
         String sIndirizzo = isEmpty(indirizzo) ? "NULL" : "'" + escape(indirizzo) + "'";
+        String citySub = "NULL";
+        if (!isEmpty(comune) && !isEmpty(siglaProvincia)) {
+            String escComune = escapeForSql(comune).toLowerCase();
+            String escSigla = escape(siglaProvincia).toLowerCase();
+            citySub = String.format("(SELECT c.id FROM cities c JOIN provinces p ON p.id = c.province_id WHERE LOWER(TRIM(c.name)) = '%s' AND (LOWER(TRIM(p.sigla)) = '%s' OR LOWER(TRIM(p.name)) LIKE '%%%s%%') LIMIT 1)", escComune, escSigla, escSigla);
+        }
+
         String sql = String.format(
-                "INSERT INTO hospital (codice_regione, codice_asl, codice_struttura, struttura, indirizzo, hospital_type_id, asl_id) VALUES ('%s','%s','%s',%s,%s,%s,%s) ON DUPLICATE KEY UPDATE codice_regione = VALUES(codice_regione), struttura = VALUES(struttura), indirizzo = VALUES(indirizzo), hospital_type_id = VALUES(hospital_type_id), asl_id = VALUES(asl_id);\n",
-                escape(codiceRegione), escape(codiceAsl), escape(codiceStruttura), sStruttura, sIndirizzo, hospitalTypeSub, aslSub
+                "INSERT INTO hospital (codice_regione, codice_asl, codice_struttura, struttura, indirizzo, hospital_type_id, asl_id, city_id) VALUES ('%s','%s','%s',%s,%s,%s,%s,%s) ON DUPLICATE KEY UPDATE codice_regione = VALUES(codice_regione), struttura = VALUES(struttura), indirizzo = VALUES(indirizzo), hospital_type_id = VALUES(hospital_type_id), asl_id = VALUES(asl_id), city_id = VALUES(city_id);\n",
+                escape(codiceRegione), escape(codiceAsl), escape(codiceStruttura), sStruttura, sIndirizzo, hospitalTypeSub, aslSub, citySub
         );
         return sql;
     }

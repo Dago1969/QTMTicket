@@ -38,6 +38,9 @@ databaseChangeLog:
               - column:
                   name: asl_id
                   type: BIGINT
+              - column:
+                  name: city_id
+                  type: BIGINT
         - addUniqueConstraint:
             columnNames: codice_asl,codice_struttura
             constraintName: uq_hospital_codice_asl_codice_struttura
@@ -54,6 +57,12 @@ databaseChangeLog:
             referencedTableName: asl
             referencedColumnNames: id
             constraintName: fk_hospital_asl
+        - addForeignKeyConstraint:
+            baseTableName: hospital
+            baseColumnNames: city_id
+            referencedTableName: cities
+            referencedColumnNames: id
+            constraintName: fk_hospital_city
       rollback:
         - dropTable:
             tableName: hospital

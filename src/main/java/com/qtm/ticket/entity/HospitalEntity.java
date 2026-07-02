@@ -37,4 +37,8 @@ public class HospitalEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "asl_id")
     private ASLEntity asl;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "city_id")
+    private CityEntity city;
 }

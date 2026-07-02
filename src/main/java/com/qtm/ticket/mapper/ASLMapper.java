@@ -20,6 +20,7 @@ public class ASLMapper {
                 .id(entity.getId())
                 .codiceAzienda(entity.getCodiceAzienda())
                 .denominazioneAzienda(entity.getDenominazioneAzienda())
+                .codiceRegione(entity.getCodiceRegione())
                 .cityId(entity.getCity() != null ? entity.getCity().getId() : null)
                 .indirizzo(entity.getIndirizzo())
                 .cap(entity.getCap())
@@ -28,6 +29,7 @@ public class ASLMapper {
                 .email(entity.getEmail())
                 .sitoWeb(entity.getSitoWeb())
                 .partitaIva(entity.getPartitaIva())
+                .codiceRegione(entity.getCodiceRegione())
                 .build();
     }
 

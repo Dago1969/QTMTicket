@@ -1,21 +1,25 @@
 databaseChangeLog:
   - changeSet:
-      id: 20260627-04-load-disciplines-and-structure-departments
+      id: 20260701-03-load-hospital-data
       author: copilot
       runAlways: true
       preConditions:
         - onFail: HALT
           onError: HALT
-          tableExists:
-            tableName: structure_departments
+        - tableExists:
+            tableName: hospital
+        - tableExists:
+            tableName: hospital_type
+        - tableExists:
+            tableName: asl
       changes:
         - sql:
             splitStatements: false
             endDelimiter: ";"
             sql: |
-              DROP TABLE IF EXISTS structure_departments_staging;
+              DROP TABLE IF EXISTS hospital_staging;
         - createTable:
-            tableName: structure_departments_staging
+            tableName: hospital_staging
             columns:
               - column:
                   name: anno
@@ -58,7 +62,7 @@ databaseChangeLog:
                   type: VARCHAR(20)
               - column:
                   name: codice_disciplina
-                  type: VARCHAR(20)
+                  type: VARCHAR(50)
               - column:
                   name: disciplina
                   type: VARCHAR(200)
@@ -97,7 +101,7 @@ databaseChangeLog:
             relativeToChangelogFile: true
             encoding: UTF-8
             separator: ';'
-            tableName: structure_departments_staging
+            tableName: hospital_staging
             columns:
               - column:
                   header: anno
@@ -138,64 +142,75 @@ databaseChangeLog:
               - column:
                   header: sigla_provincia
                   name: sigla_provincia
-              - column:
-                  header: codice_disciplina
-                  name: codice_disciplina
-              - column:
-                  header: disciplina
-                  name: disciplina
-              - column:
-                  header: posti_letto_day_hospital
-                  name: posti_letto_day_hospital
-              - column:
-                  header: posti_letto_day_surgery
-                  name: posti_letto_day_surgery
-              - column:
-                  header: posti_letto_degenza_ordinaria
-                  name: posti_letto_degenza_ordinaria
-              - column:
-                  header: posti_letto_utilizzati
-                  name: posti_letto_utilizzati
-              - column:
-                  header: num_dimessi
-                  name: num_dimessi
-              - column:
-                  header: giornate_degenza
-                  name: giornate_degenza
-              - column:
-                  header: giornate_disponibili
-                  name: giornate_disponibili
-              - column:
-                  header: degenza_media_ordinaria
-                  name: degenza_media_ordinaria
-              - column:
-                  header: icm
-                  name: icm
-              - column:
-                  header: tasso_utilizzo
-                  name: tasso_utilizzo
         - sql:
             splitStatements: false
             endDelimiter: ";"
             sql: |
-              INSERT INTO discipline (codice_disciplina, disciplina)
-              SELECT DISTINCT TRIM(s.codice_disciplina), TRIM(s.disciplina)
-              FROM structure_departments_staging s
-              WHERE TRIM(s.codice_disciplina) IS NOT NULL
-              AND TRIM(s.disciplina) IS NOT NULL
-              ON DUPLICATE KEY UPDATE disciplina = VALUES(disciplina);
+              INSERT INTO hospital_type (code, description)
+              SELECT DISTINCT TRIM(s.codice_tipo_struttura), TRIM(s.tipo_struttura)
+              FROM hospital_staging s
+              WHERE TRIM(s.codice_tipo_struttura) IS NOT NULL
+                AND TRIM(s.codice_tipo_struttura) <> ''
+                AND TRIM(s.tipo_struttura) IS NOT NULL
+                AND TRIM(s.tipo_struttura) <> ''
+              ON DUPLICATE KEY UPDATE description = VALUES(description);
         - sql:
             splitStatements: false
             endDelimiter: ";"
             sql: |
-              INSERT INTO structure_departments (codice_struttura, codice_disciplina, indirizzo)
-              SELECT DISTINCT TRIM(s.codice_struttura), TRIM(s.codice_disciplina), TRIM(s.indirizzo)
-              FROM structure_departments_staging s
-              WHERE TRIM(s.codice_struttura) IS NOT NULL
-              AND TRIM(s.codice_disciplina) IS NOT NULL
-              ON DUPLICATE KEY UPDATE indirizzo = VALUES(indirizzo);
+              INSERT INTO hospital (
+                  codice_regione,
+                  codice_asl,
+                  codice_struttura,
+                  struttura,
+                  indirizzo,
+                  hospital_type_id,
+                  asl_id,
+                  city_id
+              )
+              SELECT
+                  CASE
+                      WHEN LENGTH(TRIM(s.codice_regione)) >= 2 THEN LEFT(TRIM(s.codice_regione), 2)
+                      ELSE LPAD(TRIM(s.codice_regione), 2, '0')
+                  END AS codice_regione_norm,
+                  TRIM(s.codice_asl) AS codice_asl,
+                  TRIM(s.codice_struttura) AS codice_struttura,
+                  ANY_VALUE(TRIM(s.struttura)) AS struttura,
+                  ANY_VALUE(TRIM(s.indirizzo)) AS indirizzo,
+                  ANY_VALUE(ht.id) AS hospital_type_id,
+                      ANY_VALUE(a.id) AS asl_id,
+                      ANY_VALUE(c.id) AS city_id
+              FROM hospital_staging s
+              LEFT JOIN hospital_type ht ON ht.code = TRIM(s.codice_tipo_struttura)
+              LEFT JOIN asl a ON a.codice_azienda = TRIM(s.codice_asl)
+               AND a.codice_regione = CASE
+                   WHEN LENGTH(TRIM(s.codice_regione)) >= 2 THEN LEFT(TRIM(s.codice_regione), 2)
+                   ELSE LPAD(TRIM(s.codice_regione), 2, '0')
+               END
+                  LEFT JOIN provinces p ON (
+                      LOWER(TRIM(p.sigla)) = LOWER(TRIM(s.sigla_provincia))
+                      OR LOWER(TRIM(p.name)) LIKE CONCAT('%', LOWER(TRIM(s.sigla_provincia)), '%')
+                  )
+                  LEFT JOIN cities c ON LOWER(TRIM(c.name)) = LOWER(TRIM(s.comune)) AND c.province_id = p.id
+              WHERE TRIM(s.codice_asl) IS NOT NULL
+                AND TRIM(s.codice_asl) <> ''
+                AND TRIM(s.codice_struttura) IS NOT NULL
+                AND TRIM(s.codice_struttura) <> ''
+              GROUP BY
+                  CASE
+                      WHEN LENGTH(TRIM(s.codice_regione)) >= 2 THEN LEFT(TRIM(s.codice_regione), 2)
+                      ELSE LPAD(TRIM(s.codice_regione), 2, '0')
+                  END,
+                  TRIM(s.codice_asl),
+                  TRIM(s.codice_struttura)
+              ON DUPLICATE KEY UPDATE
+                  struttura = VALUES(struttura),
+                  indirizzo = VALUES(indirizzo),
+                      hospital_type_id = VALUES(hospital_type_id),
+                      asl_id = VALUES(asl_id),
+                      city_id = VALUES(city_id);
         - sql:
             splitStatements: false
             endDelimiter: ";"
             sql: |
-              DROP TABLE IF EXISTS structure_departments_staging;
+              DROP TABLE IF EXISTS hospital_staging;

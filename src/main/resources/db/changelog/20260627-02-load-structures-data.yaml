@@ -54,8 +54,8 @@ databaseChangeLog:
                   name: descrizione_tipo_struttura
                   type: VARCHAR(500)
         - loadData:
-            file: classpath:AO, AOU e IRCCS pubblici_2010-2022.csv
-            relativeToChangelogFile: false
+            file: ../../AO, AOU e IRCCS pubblici_2010-2022.csv
+            relativeToChangelogFile: true
             encoding: UTF-8
             separator: ';'
             tableName: structures_staging
