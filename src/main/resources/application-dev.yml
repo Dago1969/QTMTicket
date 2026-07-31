@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    # FIXME Francesco: configurazione per avviare il backend locale contro il DB DEV.
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://${DB_HOST:qtmdev.quicare.com}:${DB_PORT:3306}/${DB_NAME:qtmticket}?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&connectionTimeZone=UTC&forceConnectionTimeZoneToSession=true}
+    username: ${SPRING_DATASOURCE_USERNAME:${DB_USERNAME:root}}
+    # FIXME Francesco: credenziale DEV temporanea; spostare fuori dal repository.
+    password: ${SPRING_DATASOURCE_PASSWORD:${DB_PASSWORD:qtm@dev#pwd33}}
+
+server:
+  # FIXME Francesco: porta locale Ticket; Docker continua a forzare SERVER_PORT=8080.
+  port: ${SERVER_PORT:8084}
+  servlet:
+    context-path: ${SERVER_SERVLET_CONTEXT_PATH:/api/ticket}

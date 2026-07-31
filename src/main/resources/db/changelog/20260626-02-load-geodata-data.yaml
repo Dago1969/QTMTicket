@@ -9,10 +9,8 @@ databaseChangeLog:
           tableExists:
             tableName: regions
       changes:
-        - dropTable:
-            tableName: italian_comuni_staging
-            ifExists: true
-            cascadeConstraints: true
+        # FIXME Francesco: Liquibase 4.31.1 ignora ifExists su dropTable con MariaDB e genera un DROP TABLE non protetto.
+        - sql: "DROP TABLE IF EXISTS italian_comuni_staging;"
         - createTable:
             tableName: italian_comuni_staging
             columns:
