@@ -8,7 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class ExcelToSqlGenerator {
+public class ExcelToSqlGeneratorASL {
 
     public static void main(String[] args) {
         // Configura i percorsi dei file
