@@ -2,9 +2,9 @@ spring:
   application:
     name: qtm-ticket
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:QTMTicket}?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&connectionTimeZone=UTC&forceConnectionTimeZoneToSession=true}
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://${DB_HOST:qtmdev.quicare.com}:${DB_PORT:3306}/${DB_NAME:QTMTicket}?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&connectionTimeZone=UTC&forceConnectionTimeZoneToSession=true}
     username: ${SPRING_DATASOURCE_USERNAME:${DB_USERNAME:root}}
-    password: ${SPRING_DATASOURCE_PASSWORD:${DB_PASSWORD:dago}}
+    password: ${SPRING_DATASOURCE_PASSWORD:${DB_PASSWORD:qtm@dev#pwd33}}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
@@ -29,6 +29,8 @@ server:
     context-path: /api/ticket
 
 logging:
+  file:
+    name: /opt/qtm/QtmTicket/logs/qtm-ticket.log  # <--- Percorso completo + nome file
   level:
     root: INFO
     com.qtm: DEBUG

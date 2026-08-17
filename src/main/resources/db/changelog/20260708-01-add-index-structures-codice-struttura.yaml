@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260708-01-add-index-structures-codice-struttura
+      author: copilot
+      preConditions:
+        - onFail: MARK_RAN
+          onError: HALT
+          not:
+            indexExists:
+              tableName: structures
+              indexName: idx_structures_codice_struttura
+      changes:
+        - createIndex:
+            tableName: structures
+            indexName: idx_structures_codice_struttura
+            columns:
+              - column:
+                  name: codice_struttura
+                  type: VARCHAR(50)
