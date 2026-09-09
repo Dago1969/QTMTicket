@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260701-04-dump-hospital
+      author: copilot
+      runAlways: true
+      changes:
+        - sql:
+            splitStatements: false
+            endDelimiter: ";"
+            sql: |
+              -- Export a sample of hospital rows to a CSV in the project target directory
+              SELECT codice_regione, codice_asl, codice_struttura, struttura, indirizzo
+              INTO OUTFILE 'C:/Users/Dago/git/QTM/QTMTicket/target/hospital_dump_sample.csv'
+              FIELDS TERMINATED BY ';' LINES TERMINATED BY '\n'
+              FROM hospital
+              LIMIT 1000;
+        - sql:
+            splitStatements: false
+            endDelimiter: ";"
+            sql: |
+              SELECT CONCAT('hospital_count:', COUNT(*))
+              INTO OUTFILE 'C:/Users/Dago/git/QTM/QTMTicket/target/hospital_count.txt'
+              FIELDS TERMINATED BY '' LINES TERMINATED BY '\n'
+              FROM hospital;

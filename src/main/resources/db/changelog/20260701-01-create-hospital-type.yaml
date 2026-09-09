@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260701-01-create-hospital-type
+      author: copilot
+      preConditions:
+        - not:
+            - tableExists:
+                tableName: hospital_type
+      changes:
+        - createTable:
+            tableName: hospital_type
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: code
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: VARCHAR(500)
+        - addUniqueConstraint:
+            columnNames: code
+            constraintName: uq_hospital_type_code
+            tableName: hospital_type
+      rollback:
+        - dropTable:
+            tableName: hospital_type
+            cascadeConstraints: true

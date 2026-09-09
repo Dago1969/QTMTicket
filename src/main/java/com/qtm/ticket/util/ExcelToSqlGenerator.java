@@ -39,17 +39,13 @@ public class ExcelToSqlGenerator {
 
                 // Estrazione dei dati (Adatta gli indici 0, 1, 2... alla struttura del tuo Excel)
                 String region = getCellValueAsString(row.getCell(0));
-                String regionIdSubquery = "(SELECT code FROM regions WHERE UPPER(name) like(UPPER('"+cleanSqlString(region)+"%')))" ;
                 String codiceAzienda = getCellValueAsLong(row.getCell(1)) != null ? String.valueOf(getCellValueAsLong(row.getCell(1))) : "";
                 String denominazioneAzienda = cleanSqlString(getCellValueAsString(row.getCell(2)));
                 String indirizzo = cleanSqlString(getCellValueAsString(row.getCell(3)));
                 String cap = getCellValueAsString(row.getCell(4));
-               //Long regionId = 0L; // Fondamentale per la constraint
+                Long cityId = getCellValueAsLong(row.getCell(5)); // Se presente numerico
+               Long regionId = 0L; // Fondamentale per la constraint
                 String siglaprovincia = cleanSqlString(getCellValueAsString(row.getCell(6)));
-                String provinciaIdSubquery = String.format("(SELECT id FROM provinces WHERE UPPER(sigla) = UPPER('%s'))", cleanSqlString(siglaprovincia));
-
-                String cityName = cleanSqlString(getCellValueAsString(row.getCell(5))); // Se presente numerico
-                String cityIdSubquery = String.format("(SELECT id FROM cities WHERE UPPER(name) = UPPER('%s') AND province_id = "+provinciaIdSubquery+")", cleanSqlString(cityName));
                 
                 String telefono = getCellValueAsString(row.getCell(7));
                 String fax = getCellValueAsString(row.getCell(8));
@@ -65,31 +61,26 @@ public class ExcelToSqlGenerator {
                 // Generazione della query SQL (Sintassi PostgreSQL: ON CONFLICT)
                 // Se usi MySQL, usa: ON DUPLICATE KEY UPDATE denominazione_azienda = VALUES(denominazione_azienda), ...
                 String sql = String.format(
-                        "INSERT INTO asl (codice_azienda, denominazione_azienda, city_id, codice_regione, indirizzo, cap, telefono, fax, email, sito_web, partita_iva) " +
-                        "VALUES ('%s', '%s', %s, %s, %s, %s, %s, %s, %s, %s, %s) " +
-                        "ON DUPLICATE KEY UPDATE " +
-                        "denominazione_azienda = VALUES(denominazione_azienda), " +
-                        "city_id = VALUES(city_id), " +
-                        "indirizzo = VALUES(indirizzo), " +
-                        "cap = VALUES(cap), " +
-                        "telefono = VALUES(telefono), " +
-                        "fax = VALUES(fax), " +
-                        "email = VALUES(email), " +
-                        "sito_web = VALUES(sito_web), " +
-                        "partita_iva = VALUES(partita_iva);\n",
-                        
-                        codiceAzienda, 
-                        denominazioneAzienda, 
-                        cityIdSubquery, 
-                        regionIdSubquery, // Sottoquery dinamica qui
-                        formatNullableString(indirizzo), 
-                        formatNullableString(cap),
-                        formatNullableString(telefono), 
-                        formatNullableString(fax),
-                        formatNullableString(email), 
-                        formatNullableString(sitoWeb),
-                        formatNullableString(partitaIva)
-                    );
+                    "INSERT INTO asl (codice_azienda, denominazione_azienda, city_id, region_id, indirizzo, cap, telefono, fax, email, sito_web, partita_iva) " +
+                    "VALUES ('%s', '%s', %s, %s, %s, %s, %s, %s, %s, %s, %s) " +
+                    "ON CONFLICT (region_id, codice_azienda) DO UPDATE SET " +
+                    "denominazione_azienda = EXCLUDED.denominazione_azienda, " +
+                    "city_id = EXCLUDED.city_id, " +
+                    "indirizzo = EXCLUDED.indirizzo, " +
+                    "cap = EXCLUDED.cap, " +
+                    "telefono = EXCLUDED.telefono, " +
+                    "fax = EXCLUDED.fax, " +
+                    "email = EXCLUDED.email, " +
+                    "sito_web = EXCLUDED.sito_web, " +
+                    "partita_iva = EXCLUDED.partita_iva;\n",
+                    
+                    codiceAzienda, denominazioneAzienda, 
+                    cityId, regionId,
+                    formatNullableString(indirizzo), formatNullableString(cap),
+                    formatNullableString(telefono), formatNullableString(fax),
+                    formatNullableString(email), formatNullableString(sitoWeb),
+                    formatNullableString(partitaIva)
+                );
 
                 fw.write(sql);
             }

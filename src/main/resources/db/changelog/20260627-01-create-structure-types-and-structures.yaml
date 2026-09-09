@@ -23,6 +23,15 @@ databaseChangeLog:
                   type: VARCHAR(500)
                   constraints:
                     nullable: false
+              - column:
+                  name: function_description
+                  type: VARCHAR(1000)
+              - column:
+                  name: parent_type_code
+                  type: VARCHAR(50)
+              - column:
+                  name: display_order
+                  type: INT
         - createTable:
             tableName: structures
             columns:
