@@ -26,8 +26,23 @@ public class StructureDepartmentController {
         return structureDepartmentService.findAll();
     }
 
+    @GetMapping(params = "codiceStruttura")
+    public List<StructureDepartmentDto> getByStructure(@org.springframework.web.bind.annotation.RequestParam String codiceStruttura) {
+        return structureDepartmentService.findByStructure(codiceStruttura);
+    }
+
     @PostMapping
     public ResponseEntity<StructureDepartmentDto> create(@RequestBody StructureDepartmentDto dto) {
         return ResponseEntity.ok(structureDepartmentService.save(dto));
+    }
+
+    @org.springframework.web.bind.annotation.DeleteMapping
+    public ResponseEntity<Void> deleteByCodes(@org.springframework.web.bind.annotation.RequestParam String codiceStruttura,
+            @org.springframework.web.bind.annotation.RequestParam String codiceDisciplina) {
+        boolean deleted = structureDepartmentService.deleteByCodes(codiceStruttura, codiceDisciplina);
+        if (deleted) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 }

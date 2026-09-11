@@ -1,10 +1,10 @@
 package com.qtm.ticket.repository;
 
-import java.util.List;
-
+import com.qtm.ticket.entity.ASLEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.qtm.ticket.entity.ASLEntity;
+import java.util.Optional;
 
 public interface ASLRepository extends JpaRepository<ASLEntity, Long> {
+	Optional<ASLEntity> findByCodiceRegioneAndCodiceAzienda(String codiceRegione, String codiceAzienda);
 }

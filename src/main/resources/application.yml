@@ -2,9 +2,15 @@ spring:
   application:
     name: qtm-ticket
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://${DB_HOST:qtmdev.quicare.com}:${DB_PORT:3306}/${DB_NAME:QTMTicket}?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&connectionTimeZone=UTC&forceConnectionTimeZoneToSession=true}
+    # Environment placeholders (can be overridden with environment variables or a .env file)
+    # DB_HOST: database host (default: localhost)
+    # DB_PORT: database port (default: 3306)
+    # DB_NAME: database/schema name (default: qtmticket)
+    # DB_USERNAME: database user (default: root)
+    # DB_PASSWORD: database password (default: change_me)
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:qtmticket}?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&connectionTimeZone=UTC&forceConnectionTimeZoneToSession=true}
     username: ${SPRING_DATASOURCE_USERNAME:${DB_USERNAME:root}}
-    password: ${SPRING_DATASOURCE_PASSWORD:${DB_PASSWORD:qtm@dev#pwd33}}
+    password: ${SPRING_DATASOURCE_PASSWORD:${DB_PASSWORD:change_me}}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
@@ -22,6 +28,11 @@ spring:
     change-log: classpath:/db/changelog/db.changelog-master.yaml
     enabled: true
     drop-first: false
+    default-schema: ${DB_NAME:qtmticket}
+  servlet:
+    multipart:
+      max-file-size: ${SPRING_SERVLET_MULTIPART_MAX_FILE_SIZE:50MB}
+      max-request-size: ${SPRING_SERVLET_MULTIPART_MAX_REQUEST_SIZE:50MB}
 
 server:
   port: 8084

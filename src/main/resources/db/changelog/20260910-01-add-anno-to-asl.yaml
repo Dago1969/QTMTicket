@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260910-01-add-anno-to-asl
+      author: copilot
+      preConditions:
+        - onFail: MARK_RAN
+          onError: HALT
+          and:
+            - tableExists:
+                tableName: asl
+            - not:
+                columnExists:
+                  tableName: asl
+                  columnName: anno
+      changes:
+        - addColumn:
+            tableName: asl
+            columns:
+              - column:
+                  name: anno
+                  type: INT

@@ -28,6 +28,12 @@ public class StructureDepartmentService {
                 .toList();
     }
 
+    public List<StructureDepartmentDto> findByStructure(String codiceStruttura) {
+        return structureDepartmentRepository.findByStructure_CodiceStruttura(codiceStruttura).stream()
+                .map(structureDepartmentMapper::entityToDto)
+                .toList();
+    }
+
     public StructureDepartmentDto save(StructureDepartmentDto dto) {
         StructureDepartmentEntity entity = structureDepartmentMapper.dtoToEntity(dto);
         if (dto.getCodiceStruttura() != null) {
@@ -39,5 +45,16 @@ public class StructureDepartmentService {
                     .ifPresent(entity::setDisciplina);
         }
         return structureDepartmentMapper.entityToDto(structureDepartmentRepository.save(entity));
+    }
+
+    public boolean deleteByCodes(String codiceStruttura, String codiceDisciplina) {
+        var existing = structureDepartmentRepository
+                .findByStructure_CodiceStrutturaAndDisciplina_CodiceDisciplina(codiceStruttura, codiceDisciplina);
+        if (existing.isPresent()) {
+            structureDepartmentRepository.deleteByStructure_CodiceStrutturaAndDisciplina_CodiceDisciplina(codiceStruttura,
+                    codiceDisciplina);
+            return true;
+        }
+        return false;
     }
 }

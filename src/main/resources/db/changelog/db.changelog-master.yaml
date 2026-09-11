@@ -10,7 +10,7 @@ databaseChangeLog:
   - include:
       file: db/changelog/20260626-03-create-asl-table.yaml
   - include:
-      file: db/changelog/20260626-04-load-asl-data.yaml
+      file: db/changelog/20260910-01-add-anno-to-asl.yaml
   - include:
       file: db/changelog/20260627-01-create-structure-types-and-structures.yaml
   - include:
@@ -26,4 +26,4 @@ databaseChangeLog:
   - include:
       file: db/changelog/20260702-01-add-hospital-cityid.yaml
   - include:
-      file: db/changelog/20260701-03-load-hospital-data.yaml
+      file: db/changelog/20260911-01-add-hospital-import-columns.yaml

@@ -18,6 +18,7 @@ public class ASLMapper {
         }
         return ASLDto.builder()
                 .id(entity.getId())
+            .anno(entity.getAnno())
                 .codiceAzienda(entity.getCodiceAzienda())
                 .denominazioneAzienda(entity.getDenominazioneAzienda())
                 .codiceRegione(entity.getCodiceRegione())
@@ -29,7 +30,6 @@ public class ASLMapper {
                 .email(entity.getEmail())
                 .sitoWeb(entity.getSitoWeb())
                 .partitaIva(entity.getPartitaIva())
-                .codiceRegione(entity.getCodiceRegione())
                 .build();
     }
 
@@ -43,8 +43,10 @@ public class ASLMapper {
         }
         return ASLEntity.builder()
                 .id(dto.getId())
+            .anno(dto.getAnno())
                 .codiceAzienda(dto.getCodiceAzienda())
                 .denominazioneAzienda(dto.getDenominazioneAzienda())
+            .codiceRegione(dto.getCodiceRegione())
                 .city(city)
                 .indirizzo(dto.getIndirizzo())
                 .cap(dto.getCap())

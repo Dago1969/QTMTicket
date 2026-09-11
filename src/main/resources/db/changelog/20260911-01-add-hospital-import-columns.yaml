@@ -1,0 +1,50 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260911-01-add-hospital-import-columns
+      author: copilot
+      preConditions:
+        - onFail: MARK_RAN
+          onError: HALT
+        - tableExists:
+            tableName: hospital
+      changes:
+        - addColumn:
+            tableName: hospital
+            columns:
+              - column:
+                  name: anno
+                  type: INT
+              - column:
+                  name: regione
+                  type: VARCHAR(200)
+              - column:
+                  name: asl
+                  type: VARCHAR(200)
+              - column:
+                  name: comune
+                  type: VARCHAR(200)
+              - column:
+                  name: sigla_provincia
+                  type: VARCHAR(20)
+              - column:
+                  name: tipo_struttura
+                  type: VARCHAR(200)
+      rollback:
+        - dropColumn:
+            tableName: hospital
+            columnName: tipo_struttura
+        - dropColumn:
+            tableName: hospital
+            columnName: sigla_provincia
+        - dropColumn:
+            tableName: hospital
+            columnName: comune
+        - dropColumn:
+            tableName: hospital
+            columnName: asl
+        - dropColumn:
+            tableName: hospital
+            columnName: regione
+        - dropColumn:
+            tableName: hospital
+            columnName: anno

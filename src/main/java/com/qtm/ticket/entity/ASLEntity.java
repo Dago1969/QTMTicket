@@ -7,7 +7,7 @@ import lombok.*;
  * Entity che rappresenta i record ASL importati da ASL_2010-2026.csv.
  */
 @Entity
-@Table(name = "asl", uniqueConstraints = {@UniqueConstraint(columnNames = {"codice_azienda", "denominazione_azienda"})})
+@Table(name = "asl", uniqueConstraints = {@UniqueConstraint(columnNames = {"codice_regione", "codice_azienda"})})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -30,6 +30,9 @@ public class ASLEntity {
 
     @Column(name = "codice_regione", length = 10, nullable = false)
     private String codiceRegione;
+
+    @Column(name = "anno")
+    private Integer anno;
 
     @Column(name = "indirizzo", length = 500)
     private String indirizzo;
