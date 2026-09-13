@@ -1,0 +1,11 @@
+  _____ _      _        _   
+ |_   _(_) ___| | _____| |_ 
+   | | | |/ __| |/ / _ \ __|
+   | | | | (__|   <  __/ |_ 
+   |_| |_|\___|_|\_\___|\__|
+                            
+${AnsiColor.BRIGHT_RED}
+ :: Spring Boot ::        (v${spring-boot.version})
+ :: Application Name :: (v${project.name}) 				 
+ :: Application Version :: (v${project.version})
+${AnsiColor.DEFAULT}

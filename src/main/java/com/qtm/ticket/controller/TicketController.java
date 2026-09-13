@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.qtm.ticket.dto.TicketDto;
+import com.qtm.ticket.dto.TicketFilterOptionsDto;
 import com.qtm.ticket.service.TicketService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -142,6 +143,19 @@ public class TicketController {
             realm, project, patientId, status);
         Page<TicketDto> tickets = ticketService.searchTickets(realm, project, patientId, status, pageable);
         return ResponseEntity.ok(tickets);
+    }
+
+    /**
+     * GET /tickets/filter-options - Restituisce i valori distinti disponibili per i filtri UI.
+     */
+    @GetMapping("/filter-options")
+    public ResponseEntity<TicketFilterOptionsDto> getFilterOptions(
+            @RequestParam(required = false) String realm,
+            @RequestParam(required = false) String project,
+            @RequestParam(required = false) String patientId,
+            @RequestParam(required = false) String status) {
+        log.info("Richiesta opzioni filtro ticket: realm={}, project={}, patientId={}, status={}", realm, project, patientId, status);
+        return ResponseEntity.ok(ticketService.getFilterOptions(realm, project, patientId, status));
     }
 
     /**

@@ -47,6 +47,32 @@ public interface TicketRepository extends JpaRepository<TicketEntity, Long> {
      */
     Page<TicketEntity> findByStatus(TicketEntity.TicketStatus status, Pageable pageable);
 
+        @Query("SELECT DISTINCT t.realm FROM TicketEntity t WHERE t.realm IS NOT NULL ORDER BY t.realm")
+        List<String> findDistinctRealms();
+
+        @Query("SELECT DISTINCT t.project FROM TicketEntity t WHERE t.project IS NOT NULL AND (:realm IS NULL OR t.realm = :realm) ORDER BY t.project")
+        List<String> findDistinctProjects(@Param("realm") String realm);
+
+        @Query("SELECT DISTINCT t.patientId FROM TicketEntity t WHERE t.patientId IS NOT NULL " +
+           "AND (:realm IS NULL OR t.realm = :realm) " +
+           "AND (:project IS NULL OR t.project = :project) " +
+           "AND (:status IS NULL OR t.status = :status) ORDER BY t.patientId")
+        List<String> findDistinctPatientIds(
+            @Param("realm") String realm,
+            @Param("project") String project,
+            @Param("status") TicketEntity.TicketStatus status
+        );
+
+        @Query("SELECT DISTINCT t.status FROM TicketEntity t WHERE t.status IS NOT NULL " +
+           "AND (:realm IS NULL OR t.realm = :realm) " +
+           "AND (:project IS NULL OR t.project = :project) " +
+           "AND (:patientId IS NULL OR t.patientId = :patientId) ORDER BY t.status")
+        List<TicketEntity.TicketStatus> findDistinctStatuses(
+            @Param("realm") String realm,
+            @Param("project") String project,
+            @Param("patientId") String patientId
+        );
+
     /**
      * Ricerca con filtri multipli
      */

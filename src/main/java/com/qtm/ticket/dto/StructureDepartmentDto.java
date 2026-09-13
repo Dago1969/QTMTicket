@@ -17,5 +17,6 @@ public class StructureDepartmentDto {
     private Long id;
     private String codiceStruttura;
     private String codiceDisciplina;
+    private String disciplina;
     private String indirizzo;
 }

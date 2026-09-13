@@ -8,8 +8,8 @@ import com.qtm.ticket.dto.StructureDepartmentDto;
 import com.qtm.ticket.entity.StructureDepartmentEntity;
 import com.qtm.ticket.mapper.StructureDepartmentMapper;
 import com.qtm.ticket.repository.DisciplinaRepository;
+import com.qtm.ticket.repository.HospitalRepository;
 import com.qtm.ticket.repository.StructureDepartmentRepository;
-import com.qtm.ticket.repository.StructureRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,7 +19,7 @@ public class StructureDepartmentService {
 
     private final StructureDepartmentRepository structureDepartmentRepository;
     private final StructureDepartmentMapper structureDepartmentMapper;
-    private final StructureRepository structureRepository;
+    private final HospitalRepository hospitalRepository;
     private final DisciplinaRepository disciplinaRepository;
 
     public List<StructureDepartmentDto> findAll() {
@@ -37,7 +37,7 @@ public class StructureDepartmentService {
     public StructureDepartmentDto save(StructureDepartmentDto dto) {
         StructureDepartmentEntity entity = structureDepartmentMapper.dtoToEntity(dto);
         if (dto.getCodiceStruttura() != null) {
-            structureRepository.findByCodiceStruttura(dto.getCodiceStruttura())
+            hospitalRepository.findTopByCodiceStrutturaOrderByIdAsc(dto.getCodiceStruttura())
                     .ifPresent(entity::setStructure);
         }
         if (dto.getCodiceDisciplina() != null) {

@@ -1,6 +1,7 @@
 package com.qtm.ticket.service;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.qtm.ticket.dto.TicketDto;
+import com.qtm.ticket.dto.TicketFilterOptionsDto;
 import com.qtm.ticket.entity.TicketEntity;
 import com.qtm.ticket.exception.TicketNotFoundException;
 import com.qtm.ticket.exception.TicketValidationException;
@@ -170,6 +172,30 @@ public class TicketService {
                 .map(ticketMapper::entityToDto);
     }
 
+            /**
+             * Restituisce i valori distinti presenti nel DB ticket per costruire i filtri a cascata lato UI.
+             */
+            public TicketFilterOptionsDto getFilterOptions(String realm, String project, String patientId, String status) {
+            TicketEntity.TicketStatus ticketStatus = parseTicketStatus(status);
+
+            return TicketFilterOptionsDto.builder()
+                .realms(ticketRepository.findDistinctRealms())
+                .projects(ticketRepository.findDistinctProjects(normalizeBlankToNull(realm)))
+                .patientIds(ticketRepository.findDistinctPatientIds(
+                    normalizeBlankToNull(realm),
+                    normalizeBlankToNull(project),
+                    ticketStatus
+                ))
+                .statuses(ticketRepository.findDistinctStatuses(
+                        normalizeBlankToNull(realm),
+                        normalizeBlankToNull(project),
+                        normalizeBlankToNull(patientId)
+                    ).stream()
+                    .map(Enum::name)
+                    .toList())
+                .build();
+            }
+
     /**
      * Recupera i ticket aperti per paziente
      */
@@ -222,5 +248,25 @@ public class TicketService {
         if (ticketDto.getTicketType() == null || ticketDto.getTicketType().isBlank()) {
             throw new TicketValidationException("Il ticketType è obbligatorio");
         }
+    }
+
+    private TicketEntity.TicketStatus parseTicketStatus(String status) {
+        String normalizedStatus = normalizeBlankToNull(status);
+        if (normalizedStatus == null) {
+            return null;
+        }
+
+        try {
+            return TicketEntity.TicketStatus.valueOf(normalizedStatus.trim().toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException exception) {
+            throw new TicketValidationException("Stato non valido: " + status);
+        }
+    }
+
+    private String normalizeBlankToNull(String value) {
+        if (value == null || value.isBlank()) {
+            return null;
+        }
+        return value.trim();
     }
 }

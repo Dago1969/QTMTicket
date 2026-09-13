@@ -34,7 +34,7 @@ public class StructureDepartmentEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "codice_struttura", referencedColumnName = "codice_struttura")
-    private StructureEntity structure;
+    private HospitalEntity structure;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "codice_disciplina", referencedColumnName = "codice_disciplina")
