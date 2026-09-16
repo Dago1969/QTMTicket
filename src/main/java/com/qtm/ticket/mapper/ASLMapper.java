@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import com.qtm.commonlib.dto.ASLDto;
 import com.qtm.ticket.entity.ASLEntity;
 import com.qtm.ticket.entity.CityEntity;
+import com.qtm.ticket.entity.ProvinceEntity;
 
 /**
  * Mapper per ASLEntity e ASLDto.
@@ -23,6 +24,7 @@ public class ASLMapper {
                 .denominazioneAzienda(entity.getDenominazioneAzienda())
                 .codiceRegione(entity.getCodiceRegione())
                 .cityId(entity.getCity() != null ? entity.getCity().getId() : null)
+                .provinceId(entity.getProvince() != null ? entity.getProvince().getId() : null)
                 .indirizzo(entity.getIndirizzo())
                 .cap(entity.getCap())
                 .telefono(entity.getTelefono())
@@ -41,6 +43,10 @@ public class ASLMapper {
         if (dto.getCityId() != null) {
             city = CityEntity.builder().id(dto.getCityId()).build();
         }
+        ProvinceEntity province = null;
+        if (dto.getProvinceId() != null) {
+            province = ProvinceEntity.builder().id(dto.getProvinceId()).build();
+        }
         return ASLEntity.builder()
                 .id(dto.getId())
             .anno(dto.getAnno())
@@ -48,6 +54,7 @@ public class ASLMapper {
                 .denominazioneAzienda(dto.getDenominazioneAzienda())
             .codiceRegione(dto.getCodiceRegione())
                 .city(city)
+                .province(province)
                 .indirizzo(dto.getIndirizzo())
                 .cap(dto.getCap())
                 .telefono(dto.getTelefono())

@@ -2,8 +2,10 @@ package com.qtm.ticket.service;
 
 import com.qtm.ticket.entity.ASLEntity;
 import com.qtm.ticket.entity.CityEntity;
+import com.qtm.ticket.entity.ProvinceEntity;
 import com.qtm.ticket.repository.ASLRepository;
 import com.qtm.ticket.repository.CityRepository;
+import com.qtm.ticket.repository.ProvinceRepository;
 import com.qtm.ticket.repository.RegionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ public class ASLImportService {
 
     private final ASLRepository aslRepository;
     private final CityRepository cityRepository;
+    private final ProvinceRepository provinceRepository;
     private final RegionRepository regionRepository;
 
     @Transactional
@@ -69,6 +72,10 @@ public class ASLImportService {
                                 .orElse(null));
             }
 
+            ProvinceEntity province = city != null
+                    ? city.getProvince()
+                    : findProvinceBySigla(dto.getSiglaProvincia());
+
             String normalizedRegionCode = resolveRegionCode(dto);
             if (normalizedRegionCode == null) {
                 continue;
@@ -91,7 +98,7 @@ public class ASLImportService {
             }
 
             CityEntity resolvedCity = city;
-            ASLEntity entity = buildOrUpdateEntity(existingEntity.orElse(null), dto, normalizedRegionCode, resolvedCity);
+            ASLEntity entity = buildOrUpdateEntity(existingEntity.orElse(null), dto, normalizedRegionCode, resolvedCity, province);
 
             if (entity != null) {
                 entitiesToSave.add(entity);
@@ -181,13 +188,15 @@ public class ASLImportService {
     private ASLEntity buildOrUpdateEntity(ASLEntity existingEntity,
                                           AslCsvRecordDto dto,
                                           String normalizedRegionCode,
-                                          CityEntity city) {
+                                          CityEntity city,
+                                          ProvinceEntity province) {
         ASLEntity entity = existingEntity != null ? existingEntity : new ASLEntity();
         entity.setAnno(dto.getAnno());
         entity.setCodiceAzienda(dto.getCodiceAzienda().trim());
         entity.setDenominazioneAzienda(dto.getDenominazioneAzienda().trim());
         entity.setCodiceRegione(normalizedRegionCode);
         entity.setCity(city);
+        entity.setProvince(province);
         entity.setIndirizzo(trimToNull(dto.getIndirizzo()));
         entity.setCap(trimToNull(dto.getCap()));
         entity.setTelefono(trimToNull(dto.getTelefono()));
@@ -196,5 +205,13 @@ public class ASLImportService {
         entity.setSitoWeb(trimToNull(dto.getSitoWeb()));
         entity.setPartitaIva(trimToNull(dto.getPartitaIva()));
         return entity;
+    }
+
+    private ProvinceEntity findProvinceBySigla(String siglaProvincia) {
+        String normalizedSigla = trimToNull(siglaProvincia);
+        if (normalizedSigla == null) {
+            return null;
+        }
+        return provinceRepository.findFirstBySiglaIgnoreCase(normalizedSigla).orElse(null);
     }
 }

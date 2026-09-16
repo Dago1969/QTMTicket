@@ -59,6 +59,9 @@ public class StructureEntity {
     @Column(name = "city_id")
     private Long cityId;
 
+    @Column(name = "active", nullable = false)
+    private Boolean active;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "structure_type_code")
     private StructureTypeEntity structureType;

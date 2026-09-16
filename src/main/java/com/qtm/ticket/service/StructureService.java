@@ -25,9 +25,9 @@ public class StructureService {
     private final StructureTypeRepository structureTypeRepository;
 
     public List<StructureDto> findAll() {
-        return structureRepository.findAll().stream()
-                .map(structureMapper::entityToDto)
-                .toList();
+        return structureRepository.findAllByActiveTrue().stream()
+            .map(structureMapper::entityToDto)
+            .toList();
     }
 
     public StructureDto findById(Long id) {
@@ -62,6 +62,9 @@ public class StructureService {
             StructureTypeEntity type = structureTypeRepository.findById(dto.getStructureTypeCode())
                     .orElse(StructureTypeEntity.builder().code(dto.getStructureTypeCode()).description(dto.getStructureTypeDescription()).build());
             entity.setStructureType(type);
+        }
+        if (entity.getActive() == null) {
+            entity.setActive(dto.getActive() != null ? dto.getActive() : false);
         }
         return structureMapper.entityToDto(structureRepository.save(entity));
     }

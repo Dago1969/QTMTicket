@@ -119,7 +119,8 @@ databaseChangeLog:
                 codice_comune,
                 comune,
                 sigla_provincia,
-                structure_type_code
+                                structure_type_code,
+                                active
               )
               SELECT
                 TRIM(s.codice_regione),
@@ -130,7 +131,8 @@ databaseChangeLog:
                 TRIM(s.codice_comune),
                 TRIM(s.comune),
                 TRIM(s.sigla_provincia),
-                TRIM(s.codice_tipo_struttura)
+                                TRIM(s.codice_tipo_struttura),
+                                TRUE
               FROM (
                 SELECT s.*, ROW_NUMBER() OVER (
                   PARTITION BY s.codice_regione, s.codice_azienda, s.codice_struttura
@@ -145,7 +147,8 @@ databaseChangeLog:
                 codice_comune = VALUES(codice_comune),
                 comune = VALUES(comune),
                 sigla_provincia = VALUES(sigla_provincia),
-                structure_type_code = VALUES(structure_type_code);
+                                structure_type_code = VALUES(structure_type_code),
+                                active = VALUES(active);
         - sql:
             splitStatements: false
             endDelimiter: ";"

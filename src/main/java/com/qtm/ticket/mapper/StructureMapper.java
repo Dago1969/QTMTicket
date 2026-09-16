@@ -30,6 +30,7 @@ public class StructureMapper {
                 .cityId(entity.getCityId())
                 .structureTypeCode(type != null ? type.getCode() : null)
                 .structureTypeDescription(type != null ? type.getDescription() : null)
+                .active(entity.getActive())
                 .build();
     }
 
@@ -53,6 +54,7 @@ public class StructureMapper {
                 .siglaProvincia(dto.getSiglaProvincia())
                 .cityId(dto.getCityId())
                 .structureType(type)
+                .active(dto.getActive() != null ? dto.getActive() : false)
                 .build();
     }
 }

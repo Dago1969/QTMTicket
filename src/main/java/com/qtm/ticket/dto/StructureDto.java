@@ -25,4 +25,5 @@ public class StructureDto {
     private Long cityId;
     private String structureTypeCode;
     private String structureTypeDescription;
+    private Boolean active;
 }

@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260909-01-add-structures-active-column
+      author: copilot
+      preConditions:
+        - onFail: MARK_RAN
+          onError: HALT
+          not:
+            columnExists:
+              tableName: structures
+              columnName: active
+      changes:
+        - addColumn:
+            tableName: structures
+            columns:
+              - column:
+                  name: active
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+ 

@@ -28,6 +28,10 @@ public class ASLEntity {
     @JoinColumn(name = "city_id")
     private CityEntity city;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "province_id")
+    private ProvinceEntity province;
+
     @Column(name = "codice_regione", length = 10, nullable = false)
     private String codiceRegione;
 

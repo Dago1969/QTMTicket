@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/hospitals")
+@RequestMapping("/api/hospitals")
 @RequiredArgsConstructor
 public class HospitalController {
 
@@ -28,6 +28,11 @@ public class HospitalController {
 
     @GetMapping
     public ResponseEntity<List<HospitalDto>> findAll() {
+        return ResponseEntity.ok(hospitalService.findAll());
+    }
+
+    @GetMapping("/overview")
+    public ResponseEntity<List<HospitalDto>> overview() {
         return ResponseEntity.ok(hospitalService.findAll());
     }
 

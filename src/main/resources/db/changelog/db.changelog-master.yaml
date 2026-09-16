@@ -12,6 +12,8 @@ databaseChangeLog:
   - include:
       file: db/changelog/20260910-01-add-anno-to-asl.yaml
   - include:
+      file: db/changelog/20260915-01-add-asl-provinceid.yaml
+  - include:
       file: db/changelog/20260627-01-create-structure-types-and-structures.yaml
   - include:
       file: db/changelog/20260627-02-load-structures-data.yaml
