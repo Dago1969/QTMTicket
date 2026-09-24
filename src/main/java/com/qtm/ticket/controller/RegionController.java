@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
  * REST Controller per la gestione delle regioni.
  */
 @RestController
-@RequestMapping("/api/regions")
+@RequestMapping({"/api/regions", "/regions"})
 @RequiredArgsConstructor
 @Slf4j
 public class RegionController {

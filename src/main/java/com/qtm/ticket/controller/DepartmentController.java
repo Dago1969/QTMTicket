@@ -11,7 +11,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/departments")
+@RequestMapping({"/api/departments", "/departments"})
 public class DepartmentController {
 
     private final DepartmentService departmentService;

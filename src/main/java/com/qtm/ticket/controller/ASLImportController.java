@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/asl")
+@RequestMapping({"/api/asl", "/asl"})
 @RequiredArgsConstructor
 public class ASLImportController {
 

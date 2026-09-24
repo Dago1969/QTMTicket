@@ -2,7 +2,7 @@ package com.qtm.ticket.mapper;
 
 import org.springframework.stereotype.Component;
 
-import com.qtm.ticket.dto.TicketDto;
+import com.qtm.commonlib.dto.TicketDto;
 import com.qtm.ticket.entity.TicketEntity;
 
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +27,10 @@ public class TicketMapper {
                 .project(entity.getProject())
                 .patientId(entity.getPatientId())
                 .therapeuticPlanId(entity.getTherapeuticPlanId())
+                .visitDate(entity.getVisitDate())
+                .prevalentNurseId(entity.getPrevalentNurseId())
+                .hospitalId(entity.getHospitalId())
+                .departmentId(entity.getDepartmentId())
                 .ticketType(entity.getTicketType() != null ? entity.getTicketType().name() : null)
                 .status(entity.getStatus() != null ? entity.getStatus().name() : null)
                 .title(entity.getTitle())
@@ -49,8 +53,10 @@ public class TicketMapper {
                 .realm(dto.getRealm())
                 .project(dto.getProject())
                 .patientId(dto.getPatientId())
-                .therapeuticPlanId(dto.getTherapeuticPlanId())
-                .ticketType(dto.getTicketType() != null ? TicketEntity.TicketType.valueOf(dto.getTicketType()) : null)
+                .therapeuticPlanId(dto.getTherapeuticPlanId())                .visitDate(dto.getVisitDate())
+                .prevalentNurseId(dto.getPrevalentNurseId())
+                .hospitalId(dto.getHospitalId())
+                .departmentId(dto.getDepartmentId())                .ticketType(dto.getTicketType() != null ? TicketEntity.TicketType.valueOf(dto.getTicketType()) : null)
                 .status(dto.getStatus() != null ? TicketEntity.TicketStatus.valueOf(dto.getStatus()) : null)
                 .title(dto.getTitle())
                 .description(dto.getDescription())

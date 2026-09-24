@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
  * REST Controller per la gestione delle strutture sanitarie.
  */
 @RestController
-@RequestMapping("/api/structures")
+@RequestMapping({"/api/structures", "/structures"})
 @RequiredArgsConstructor
 @Slf4j
 public class StructureController {

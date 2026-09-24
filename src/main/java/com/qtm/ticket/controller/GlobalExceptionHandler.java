@@ -49,6 +49,21 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * Gestisce ResponseStatusException (inclusa NoResourceFoundException)
+     */
+    @ExceptionHandler(org.springframework.web.server.ResponseStatusException.class)
+    public ResponseEntity<Map<String, Object>> handleResponseStatusException(org.springframework.web.server.ResponseStatusException e) {
+        log.warn("Risorsa non trovata o errore di routing HTTP: {}", e.getMessage());
+        
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", e.getStatusCode().value());
+        response.put("message", e.getReason() != null ? e.getReason() : e.getMessage());
+        response.put("detail", e.getLocalizedMessage());
+        
+        return ResponseEntity.status(e.getStatusCode()).body(response);
+    }
+
+    /**
      * Gestisce eccezioni generiche
      */
     @ExceptionHandler(Exception.class)

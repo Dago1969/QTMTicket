@@ -47,6 +47,30 @@ public class TicketEntity {
     private String therapeuticPlanId;
 
     /**
+     * Data e ora della visita / appuntamento associato al ticket
+     */
+    @Column(name = "visit_date")
+    private LocalDateTime visitDate;
+
+    /**
+     * ID dell'infermiere prevalente assegnato
+     */
+    @Column(name = "prevalent_nurse_id", length = 100)
+    private String prevalentNurseId;
+
+    /**
+     * ID dell'ospedale / struttura sanitaria associata
+     */
+    @Column(name = "hospital_id", length = 100)
+    private String hospitalId;
+
+    /**
+     * ID del reparto associato
+     */
+    @Column(name = "department_id", length = 100)
+    private String departmentId;
+
+    /**
      * Tipologia del ticket (es. "BUG", "FEATURE", "SUPPORT", "ISSUE", ecc.)
      */
     @Column(name = "ticket_type", nullable = false, length = 50)

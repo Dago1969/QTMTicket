@@ -16,7 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.ActiveProfiles;
 
-import com.qtm.ticket.dto.TicketDto;
+import com.qtm.commonlib.dto.TicketDto;
 import com.qtm.ticket.exception.TicketNotFoundException;
 import com.qtm.ticket.exception.TicketValidationException;
 import com.qtm.ticket.service.TicketService;

@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.qtm.ticket.dto.TicketDto;
+import com.qtm.commonlib.dto.TicketDto;
 import com.qtm.ticket.dto.TicketFilterOptionsDto;
 import com.qtm.ticket.entity.TicketEntity;
 import com.qtm.ticket.exception.TicketNotFoundException;

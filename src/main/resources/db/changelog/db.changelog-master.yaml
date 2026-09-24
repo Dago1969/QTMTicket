@@ -29,3 +29,5 @@ databaseChangeLog:
       file: db/changelog/20260702-01-add-hospital-cityid.yaml
   - include:
       file: db/changelog/20260911-01-add-hospital-import-columns.yaml
+  - include:
+      file: db/changelog/20260924-01-add-visit-and-hospital-columns-to-tickets.yaml

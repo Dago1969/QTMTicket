@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
  * REST Controller per la gestione delle città.
  */
 @RestController
-@RequestMapping("/api/cities")
+@RequestMapping({"/api/cities", "/cities"})
 @RequiredArgsConstructor
 public class CityController {
 

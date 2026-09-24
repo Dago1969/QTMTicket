@@ -15,7 +15,7 @@ import com.qtm.ticket.service.StructureDepartmentService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/api/structure-departments")
+@RequestMapping({"/api/structure-departments", "/structure-departments"})
 @RequiredArgsConstructor
 public class StructureDepartmentController {
 

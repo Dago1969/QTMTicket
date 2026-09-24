@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
  * REST Controller per la gestione delle province.
  */
 @RestController
-@RequestMapping("/api/provinces")
+@RequestMapping({"/api/provinces", "/provinces"})
 @RequiredArgsConstructor
 public class ProvinceController {
 

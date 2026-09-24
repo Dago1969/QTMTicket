@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.qtm.ticket.dto.TicketDto;
+import com.qtm.commonlib.dto.TicketDto;
 import com.qtm.ticket.dto.TicketFilterOptionsDto;
 import com.qtm.ticket.service.TicketService;
 
@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @RestController
-@RequestMapping("/tickets")
+@RequestMapping({"/api/tickets", "/tickets"})
 public class TicketController {
 
     private final TicketService ticketService;

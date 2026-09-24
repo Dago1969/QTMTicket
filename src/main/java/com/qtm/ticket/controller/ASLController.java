@@ -15,7 +15,7 @@ import java.util.List;
  * Controller REST per esporre le ASL presenti in QTMTicket.
  */
 @RestController
-@RequestMapping("/asl")
+@RequestMapping({"/api/asl", "/asl"})
 @RequiredArgsConstructor
 public class ASLController {
 

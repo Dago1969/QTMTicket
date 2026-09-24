@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260924-01-add-visit-and-hospital-columns-to-tickets
+      author: copilot
+      preConditions:
+        - onFail: MARK_RAN
+          onError: HALT
+          not:
+            columnExists:
+              tableName: tickets
+              columnName: visit_date
+      changes:
+        - addColumn:
+            tableName: tickets
+            columns:
+              - column:
+                  name: visit_date
+                  type: DATETIME
+                  constraints:
+                    nullable: true
+              - column:
+                  name: prevalent_nurse_id
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: hospital_id
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: true
+              - column:
+                  name: department_id
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: true
