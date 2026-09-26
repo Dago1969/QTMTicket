@@ -178,7 +178,7 @@ public class TicketService {
             public TicketFilterOptionsDto getFilterOptions(String realm, String project, String patientId, String status) {
             TicketEntity.TicketStatus ticketStatus = parseTicketStatus(status);
 
-            return TicketFilterOptionsDto.builder()
+            TicketFilterOptionsDto.TicketFilterOptionsDtoBuilder builder = TicketFilterOptionsDto.builder()
                 .realms(ticketRepository.findDistinctRealms())
                 .projects(ticketRepository.findDistinctProjects(normalizeBlankToNull(realm)))
                 .patientIds(ticketRepository.findDistinctPatientIds(
@@ -192,8 +192,49 @@ public class TicketService {
                         normalizeBlankToNull(patientId)
                     ).stream()
                     .map(Enum::name)
-                    .toList())
-                .build();
+                    .toList());
+
+            // Extract nurse labels (code - name) from contentJson fields of matching tickets
+            try {
+                List<String> jsons = ticketRepository.findContentJsonsForFilters(
+                    normalizeBlankToNull(realm),
+                    normalizeBlankToNull(project),
+                    normalizeBlankToNull(patientId),
+                    ticketStatus
+                );
+                // parse JSONs and collect distinct nurse labels
+                var nurseLabels = jsons.stream()
+                    .map(j -> {
+                        try {
+                            var node = new com.fasterxml.jackson.databind.ObjectMapper().readTree(j);
+                            var nurseIdNode = node.get("prevalentNurseId");
+                            var nurseCodeNode = node.get("prevalentNurseCode");
+                            var nurseNameNode = node.get("prevalentNurseName");
+                            if (nurseIdNode != null || nurseCodeNode != null || nurseNameNode != null) {
+                                String code = nurseCodeNode != null && !nurseCodeNode.asText().isBlank() ? nurseCodeNode.asText() : (nurseIdNode != null ? nurseIdNode.asText() : null);
+                                String name = nurseNameNode != null && !nurseNameNode.asText().isBlank() ? nurseNameNode.asText() : null;
+                                if (code != null && name != null) {
+                                    return code + " - " + name;
+                                } else if (code != null) {
+                                    return code;
+                                } else if (name != null) {
+                                    return name;
+                                }
+                            }
+                        } catch (Exception ignored) {}
+                        return null;
+                    })
+                    .filter(java.util.Objects::nonNull)
+                    .distinct()
+                    .sorted()
+                    .toList();
+
+                builder.nurseIds(nurseLabels);
+            } catch (Exception e) {
+                log.warn("Errore durante l'estrazione delle opzioni infermiere dai contentJson: {}", e.getMessage());
+            }
+
+            return builder.build();
             }
 
     /**

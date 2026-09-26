@@ -19,5 +19,6 @@ public class TicketFilterOptionsDto {
     private List<String> realms;
     private List<String> projects;
     private List<String> patientIds;
+    private List<String> nurseIds;
     private List<String> statuses;
 }

@@ -63,6 +63,18 @@ public interface TicketRepository extends JpaRepository<TicketEntity, Long> {
             @Param("status") TicketEntity.TicketStatus status
         );
 
+        @Query("SELECT t.contentJson FROM TicketEntity t WHERE t.contentJson IS NOT NULL " +
+           "AND (:realm IS NULL OR t.realm = :realm) " +
+           "AND (:project IS NULL OR t.project = :project) " +
+           "AND (:patientId IS NULL OR t.patientId = :patientId) " +
+           "AND (:status IS NULL OR t.status = :status)")
+        List<String> findContentJsonsForFilters(
+            @Param("realm") String realm,
+            @Param("project") String project,
+            @Param("patientId") String patientId,
+            @Param("status") TicketEntity.TicketStatus status
+        );
+
         @Query("SELECT DISTINCT t.status FROM TicketEntity t WHERE t.status IS NOT NULL " +
            "AND (:realm IS NULL OR t.realm = :realm) " +
            "AND (:project IS NULL OR t.project = :project) " +
