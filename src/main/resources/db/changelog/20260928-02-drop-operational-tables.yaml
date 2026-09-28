@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260928-02-drop-operational-tables
+      author: copilot
+      changes:
+        - sql:
+            sql: DROP TABLE IF EXISTS therapeutic_plan_visit
+        - sql:
+            sql: DROP TABLE IF EXISTS therapeutic_plan_notification
+        - sql:
+            sql: DROP TABLE IF EXISTS therapeutic_plan_contact_request
+        - sql:
+            sql: DROP TABLE IF EXISTS therapeutic_plan_alert
+        - sql:
+            sql: DROP TABLE IF EXISTS therapeutic_plan_activity_booking
+        - sql:
+            sql: DROP TABLE IF EXISTS therapeutic_plan
+        - sql:
+            sql: DROP TABLE IF EXISTS doctors
+        - sql:
+            sql: DROP TABLE IF EXISTS nurses

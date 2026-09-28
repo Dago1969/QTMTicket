@@ -31,3 +31,9 @@ databaseChangeLog:
       file: db/changelog/20260911-01-add-hospital-import-columns.yaml
   - include:
       file: db/changelog/20260924-01-add-visit-and-hospital-columns-to-tickets.yaml
+  - include:
+      file: db/changelog/20260928-01-create-realm-endpoint.yaml
+  - include:
+      file: db/changelog/20260928-02-drop-operational-tables.yaml
+  - include:
+      file: db/changelog/20260928-03-drop-patients-table.xml
