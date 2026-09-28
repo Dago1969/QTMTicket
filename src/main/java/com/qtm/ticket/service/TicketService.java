@@ -50,7 +50,6 @@ public class TicketService {
         
         TicketEntity saved = ticketRepository.save(entity);
         log.info("Ticket creato con ID: {}", saved.getId());
-        
         return ticketMapper.entityToDto(saved);
     }
 
@@ -62,7 +61,6 @@ public class TicketService {
         
         TicketEntity entity = ticketRepository.findById(id)
                 .orElseThrow(() -> new TicketNotFoundException(id));
-        
         return ticketMapper.entityToDto(entity);
     }
 
@@ -90,7 +88,6 @@ public class TicketService {
 
         TicketEntity updated = ticketRepository.save(entity);
         log.info("Ticket ID {} aggiornato", id);
-        
         return ticketMapper.entityToDto(updated);
     }
 
@@ -118,9 +115,7 @@ public class TicketService {
                 .map(ticketMapper::entityToDto);
     }
 
-    /**
-     * Recupera i ticket per progetto (paginato)
-     */
+    /** Recupera i ticket per progetto (paginato). */
     public Page<TicketDto> getTicketsByProject(String project, Pageable pageable) {
         log.debug("Recupero ticket per progetto: {}", project);
         
@@ -172,10 +167,15 @@ public class TicketService {
                 .map(ticketMapper::entityToDto);
     }
 
-            /**
-             * Restituisce i valori distinti presenti nel DB ticket per costruire i filtri a cascata lato UI.
-             */
-            public TicketFilterOptionsDto getFilterOptions(String realm, String project, String patientId, String status) {
+    public Page<TicketDto> searchTicketsForNurse(String realm, String project, String prevalentNurseId,
+            Pageable pageable) {
+        log.info("Ricerca ticket per nurseId={}, realm={}, project={}", prevalentNurseId, realm, project);
+        return ticketRepository.findByPrevalentNurseId(prevalentNurseId, pageable)
+                .map(ticketMapper::entityToDto);
+    }
+
+    /** Restituisce i valori distinti presenti nel DB per i filtri UI. */
+    public TicketFilterOptionsDto getFilterOptions(String realm, String project, String patientId, String status) {
             TicketEntity.TicketStatus ticketStatus = parseTicketStatus(status);
 
             TicketFilterOptionsDto.TicketFilterOptionsDtoBuilder builder = TicketFilterOptionsDto.builder()

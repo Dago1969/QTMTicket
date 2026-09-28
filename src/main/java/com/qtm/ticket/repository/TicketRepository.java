@@ -32,6 +32,9 @@ public interface TicketRepository extends JpaRepository<TicketEntity, Long> {
      */
     Page<TicketEntity> findByPatientId(String patientId, Pageable pageable);
 
+    @Query("SELECT t FROM TicketEntity t WHERE t.prevalentNurseId = :prevalentNurseId")
+    Page<TicketEntity> findByPrevalentNurseId(@Param("prevalentNurseId") String prevalentNurseId, Pageable pageable);
+
     /**
      * Trova i ticket per piano terapeutico
      */

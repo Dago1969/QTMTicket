@@ -138,10 +138,13 @@ public class TicketController {
             @RequestParam(required = false) String project,
             @RequestParam(required = false) String patientId,
             @RequestParam(required = false) String status,
+            @RequestParam(required = false) String prevalentNurseId,
             Pageable pageable) {
-        log.info("Ricerca ticket con filtri: realm={}, project={}, patientId={}, status={}", 
-            realm, project, patientId, status);
-        Page<TicketDto> tickets = ticketService.searchTickets(realm, project, patientId, status, pageable);
+        log.info("Ricerca ticket con filtri: realm={}, project={}, patientId={}, status={}, nurseId={}",
+            realm, project, patientId, status, prevalentNurseId);
+        Page<TicketDto> tickets = prevalentNurseId != null
+                ? ticketService.searchTicketsForNurse(realm, project, prevalentNurseId, pageable)
+                : ticketService.searchTickets(realm, project, patientId, status, pageable);
         return ResponseEntity.ok(tickets);
     }
 
