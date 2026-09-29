@@ -3,9 +3,11 @@ databaseChangeLog:
       id: 20260701-01-create-hospital-type
       author: copilot
       preConditions:
-        - not:
-            - tableExists:
-                tableName: hospital_type
+        - onFail: MARK_RAN
+          onError: HALT
+          not:
+            tableExists:
+              tableName: hospital_type
       changes:
         - createTable:
             tableName: hospital_type

@@ -61,7 +61,7 @@ databaseChangeLog:
             tableName: structures_staging
             columns:
               - column:
-                  header: ANNO
+                  header: Anno
                   name: anno
               - column:
                   header: Codice Regione
@@ -111,6 +111,7 @@ databaseChangeLog:
             endDelimiter: ";"
             sql: |
               INSERT INTO structures (
+                                id,
                 codice_regione,
                 codice_azienda,
                 codice_struttura,
@@ -123,6 +124,10 @@ databaseChangeLog:
                                 active
               )
               SELECT
+                                (SELECT COALESCE(MAX(existing.id), 0) FROM structures existing)
+                                    + ROW_NUMBER() OVER (
+                                        ORDER BY TRIM(s.codice_regione), TRIM(s.codice_azienda), TRIM(s.codice_struttura)
+                                    ),
                 TRIM(s.codice_regione),
                 TRIM(s.codice_azienda),
                 TRIM(s.codice_struttura),

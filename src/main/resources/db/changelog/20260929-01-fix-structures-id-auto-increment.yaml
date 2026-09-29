@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260929-01-fix-structures-id-auto-increment
+      author: copilot
+      preConditions:
+        - onFail: HALT
+          onError: HALT
+          tableExists:
+            tableName: structures
+      changes:
+        - sql:
+            dbms: mysql
+            sql: ALTER TABLE structures MODIFY COLUMN id BIGINT NOT NULL AUTO_INCREMENT;
