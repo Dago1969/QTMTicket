@@ -8,29 +8,16 @@ databaseChangeLog:
           onError: HALT
           tableExists:
             tableName: hospital
+        - onFail: MARK_RAN
+          onError: HALT
+          sqlCheck:
+            expectedResult: "1"
+            sql: SELECT 0
       changes:
         - sql:
             dbms: mariadb,mysql
             splitStatements: false
-            endDelimiter: ";"
-            sql: |
-              ALTER TABLE hospital ADD COLUMN IF NOT EXISTS city_id BIGINT NULL;
-              SET @fk_exists = (
-                SELECT COUNT(*)
-                FROM information_schema.TABLE_CONSTRAINTS
-                WHERE CONSTRAINT_SCHEMA = DATABASE()
-                  AND TABLE_NAME = 'hospital'
-                  AND CONSTRAINT_NAME = 'fk_hospital_city'
-                  AND CONSTRAINT_TYPE = 'FOREIGN KEY'
-              );
-              SET @fk_sql = IF(
-                @fk_exists = 0,
-                'ALTER TABLE hospital ADD CONSTRAINT fk_hospital_city FOREIGN KEY (city_id) REFERENCES cities (id)',
-                'SELECT 1'
-              );
-              PREPARE fk_statement FROM @fk_sql;
-              EXECUTE fk_statement;
-              DEALLOCATE PREPARE fk_statement;
+            sql: ALTER TABLE hospital ADD COLUMN city_id BIGINT NULL
       rollback:
         - dropForeignKeyConstraint:
             baseTableName: hospital
