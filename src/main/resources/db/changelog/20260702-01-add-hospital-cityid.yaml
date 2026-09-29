@@ -8,6 +8,10 @@ databaseChangeLog:
           onError: HALT
         - tableExists:
             tableName: hospital
+        - not:
+          - columnExists:
+            tableName: hospital
+            columnName: city_id
       changes:
         - addColumn:
             tableName: hospital

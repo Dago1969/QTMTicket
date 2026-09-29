@@ -6,8 +6,8 @@ databaseChangeLog:
         - onFail: MARK_RAN
           onError: HALT
           not:
-          tableExists:
-          tableName: hospital
+                        tableExists:
+                            tableName: hospital
       changes:
         - createTable:
             tableName: hospital
