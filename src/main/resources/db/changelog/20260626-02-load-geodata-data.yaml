@@ -9,10 +9,10 @@ databaseChangeLog:
           tableExists:
             tableName: regions
       changes:
-        - dropTable:
-            tableName: italian_comuni_staging
-            ifExists: true
-            cascadeConstraints: true
+        - sql:
+            dbms: mysql
+            splitStatements: false
+            sql: DROP TABLE IF EXISTS italian_comuni_staging;
         - createTable:
             tableName: italian_comuni_staging
             columns:
@@ -150,5 +150,7 @@ databaseChangeLog:
               SELECT DISTINCT codice_comune_alfanumerico, codice_comune_numerico, codice_catastale_comune, denominazione, IF(flag_comune_capoluogo = '1', TRUE, FALSE), p.id
               FROM italian_comuni_staging s
               JOIN provinces p ON p.code = s.codice_provincia_storico;
-        - dropTable:
-            tableName: italian_comuni_staging
+        - sql:
+            dbms: mysql
+            splitStatements: false
+            sql: DROP TABLE IF EXISTS italian_comuni_staging;
