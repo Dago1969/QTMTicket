@@ -3,9 +3,9 @@ databaseChangeLog:
       id: 20260701-02-create-hospital
       author: copilot
       preConditions:
-        - onFail: MARK_RAN
-          onError: HALT
-          not:
+                - onFail: MARK_RAN
+                    onError: HALT
+                    not:
                         tableExists:
                             tableName: hospital
       changes:

@@ -6,25 +6,31 @@ databaseChangeLog:
       preConditions:
         - onFail: MARK_RAN
           onError: HALT
-        - tableExists:
+          tableExists:
             tableName: hospital
-        - not:
-          - columnExists:
-            tableName: hospital
-            columnName: city_id
       changes:
-        - addColumn:
-            tableName: hospital
-            columns:
-              - column:
-                  name: city_id
-                  type: BIGINT
-        - addForeignKeyConstraint:
-            baseTableName: hospital
-            baseColumnNames: city_id
-            referencedTableName: cities
-            referencedColumnNames: id
-            constraintName: fk_hospital_city
+        - sql:
+            dbms: mariadb,mysql
+            splitStatements: false
+            endDelimiter: ";"
+            sql: |
+              ALTER TABLE hospital ADD COLUMN IF NOT EXISTS city_id BIGINT NULL;
+              SET @fk_exists = (
+                SELECT COUNT(*)
+                FROM information_schema.TABLE_CONSTRAINTS
+                WHERE CONSTRAINT_SCHEMA = DATABASE()
+                  AND TABLE_NAME = 'hospital'
+                  AND CONSTRAINT_NAME = 'fk_hospital_city'
+                  AND CONSTRAINT_TYPE = 'FOREIGN KEY'
+              );
+              SET @fk_sql = IF(
+                @fk_exists = 0,
+                'ALTER TABLE hospital ADD CONSTRAINT fk_hospital_city FOREIGN KEY (city_id) REFERENCES cities (id)',
+                'SELECT 1'
+              );
+              PREPARE fk_statement FROM @fk_sql;
+              EXECUTE fk_statement;
+              DEALLOCATE PREPARE fk_statement;
       rollback:
         - dropForeignKeyConstraint:
             baseTableName: hospital
