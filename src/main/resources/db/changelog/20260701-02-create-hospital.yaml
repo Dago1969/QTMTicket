@@ -2,6 +2,7 @@ databaseChangeLog:
   - changeSet:
       id: 20260701-02-create-hospital
       author: copilot
+    # Skip creation when hospital already exists in an existing database.
             preConditions:
                 - onFail: MARK_RAN
                     onError: HALT
