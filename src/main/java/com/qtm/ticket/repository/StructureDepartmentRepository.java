@@ -8,11 +8,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.qtm.ticket.entity.StructureDepartmentEntity;
 
 public interface StructureDepartmentRepository extends JpaRepository<StructureDepartmentEntity, Long> {
-    List<StructureDepartmentEntity> findByStructure_CodiceStruttura(String codiceStruttura);
+    List<StructureDepartmentEntity> findByCodiceStruttura(String codiceStruttura);
 
-    Optional<StructureDepartmentEntity> findByStructure_CodiceStrutturaAndDisciplina_CodiceDisciplina(
+    Optional<StructureDepartmentEntity> findByCodiceStrutturaAndDisciplina_CodiceDisciplina(
 	    String codiceStruttura, String codiceDisciplina);
 
-    void deleteByStructure_CodiceStrutturaAndDisciplina_CodiceDisciplina(String codiceStruttura,
+    void deleteByCodiceStrutturaAndDisciplina_CodiceDisciplina(String codiceStruttura,
 	    String codiceDisciplina);
 }

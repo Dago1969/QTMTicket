@@ -8,7 +8,6 @@ import com.qtm.ticket.dto.StructureDepartmentDto;
 import com.qtm.ticket.entity.StructureDepartmentEntity;
 import com.qtm.ticket.mapper.StructureDepartmentMapper;
 import com.qtm.ticket.repository.DisciplinaRepository;
-import com.qtm.ticket.repository.HospitalRepository;
 import com.qtm.ticket.repository.StructureDepartmentRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -19,7 +18,6 @@ public class StructureDepartmentService {
 
     private final StructureDepartmentRepository structureDepartmentRepository;
     private final StructureDepartmentMapper structureDepartmentMapper;
-    private final HospitalRepository hospitalRepository;
     private final DisciplinaRepository disciplinaRepository;
 
     public List<StructureDepartmentDto> findAll() {
@@ -36,10 +34,6 @@ public class StructureDepartmentService {
 
     public StructureDepartmentDto save(StructureDepartmentDto dto) {
         StructureDepartmentEntity entity = structureDepartmentMapper.dtoToEntity(dto);
-        if (dto.getCodiceStruttura() != null) {
-            hospitalRepository.findTopByCodiceStrutturaOrderByIdAsc(dto.getCodiceStruttura())
-                    .ifPresent(entity::setStructure);
-        }
         if (dto.getCodiceDisciplina() != null) {
             disciplinaRepository.findById(dto.getCodiceDisciplina())
                     .ifPresent(entity::setDisciplina);
@@ -49,9 +43,9 @@ public class StructureDepartmentService {
 
     public boolean deleteByCodes(String codiceStruttura, String codiceDisciplina) {
         var existing = structureDepartmentRepository
-                .findByStructure_CodiceStrutturaAndDisciplina_CodiceDisciplina(codiceStruttura, codiceDisciplina);
+                .findByCodiceStrutturaAndDisciplina_CodiceDisciplina(codiceStruttura, codiceDisciplina);
         if (existing.isPresent()) {
-            structureDepartmentRepository.deleteByStructure_CodiceStrutturaAndDisciplina_CodiceDisciplina(codiceStruttura,
+            structureDepartmentRepository.deleteByCodiceStrutturaAndDisciplina_CodiceDisciplina(codiceStruttura,
                     codiceDisciplina);
             return true;
         }
