@@ -2,12 +2,9 @@ package com.qtm.ticket.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
@@ -32,9 +29,8 @@ public class StructureDepartmentEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "codice_struttura", referencedColumnName = "codice_struttura")
-    private HospitalEntity structure;
+    @Column(name = "codice_struttura", nullable = false, length = 100)
+    private String codiceStruttura;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "codice_disciplina", referencedColumnName = "codice_disciplina")
