@@ -27,7 +27,7 @@ public class StructureDepartmentService {
     }
 
     public List<StructureDepartmentDto> findByStructure(String codiceStruttura) {
-        return structureDepartmentRepository.findByStructure_CodiceStruttura(codiceStruttura).stream()
+        return structureDepartmentRepository.findByCodiceStruttura(codiceStruttura).stream()
                 .map(structureDepartmentMapper::entityToDto)
                 .toList();
     }
