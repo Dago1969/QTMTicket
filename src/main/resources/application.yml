@@ -38,10 +38,16 @@ spring:
       max-file-size: ${SPRING_SERVLET_MULTIPART_MAX_FILE_SIZE:50MB}
       max-request-size: ${SPRING_SERVLET_MULTIPART_MAX_REQUEST_SIZE:50MB}
 
+services:
+  qtm-geography-service:
+    url: ${QTM_GEOGRAPHY_SERVICE_URL:http://localhost:8088/api/geography}
+  qtm-health-structure-service:
+    url: ${QTM_HEALTH_STRUCTURE_SERVICE_URL:http://localhost:8089/api/health-structure}
+
 server:
-  port: 8084
+  port: ${SERVER_PORT:8084}
   servlet:
-    context-path: /api/ticket
+    context-path: ${SERVER_SERVLET_CONTEXT_PATH:/api/ticket}
 
 logging:
   file:

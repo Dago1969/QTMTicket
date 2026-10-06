@@ -1,41 +1,25 @@
 databaseChangeLog:
   - include:
-      file: db/changelog/20260601-01-create-tickets-table.yaml
+      file: db/changelog/sql/01-create-regions.yaml
   - include:
-      file: db/changelog/20260614-01-create-departments-and-insert-data.yaml
+      file: db/changelog/sql/02-create-provinces.yaml
   - include:
-      file: db/changelog/20260626-01-create-geodata-tables.yaml
+      file: db/changelog/sql/03-create-cities.yaml
   - include:
-      file: db/changelog/20260626-02-load-geodata-data.yaml
+      file: db/changelog/sql/04-create-departments.yaml
   - include:
-      file: db/changelog/20260626-03-create-asl-table.yaml
+      file: db/changelog/sql/05-create-asl.yaml
   - include:
-      file: db/changelog/20260910-01-add-anno-to-asl.yaml
+      file: db/changelog/sql/06-create-structure-types.yaml
   - include:
-      file: db/changelog/20260915-01-add-asl-provinceid.yaml
+      file: db/changelog/sql/07-create-discipline.yaml
   - include:
-      file: db/changelog/20260627-01-create-structure-types-and-structures.yaml
+      file: db/changelog/sql/08-create-structures.yaml
   - include:
-      file: db/changelog/20260627-02-load-structures-data.yaml
+      file: db/changelog/sql/09-create-structure-departments.yaml
   - include:
-      file: db/changelog/20260929-01-fix-structures-id-auto-increment.yaml
+      file: db/changelog/sql/10-create-hospital-type.yaml
   - include:
-      file: db/changelog/20260627-03-create-disciplines-and-structure-departments.yaml
+      file: db/changelog/sql/11-create-hospital.yaml
   - include:
-      file: db/changelog/20260627-04-load-disciplines-and-structure-departments.yaml
-  - include:
-      file: db/changelog/20260701-01-create-hospital-type.yaml
-  - include:
-      file: db/changelog/20260701-02-create-hospital.yaml
-  - include:
-      file: db/changelog/20260702-01-add-hospital-cityid.yaml
-  - include:
-      file: db/changelog/20260911-01-add-hospital-import-columns.yaml
-  - include:
-      file: db/changelog/20260924-01-add-visit-and-hospital-columns-to-tickets.yaml
-  - include:
-      file: db/changelog/20260928-01-create-realm-endpoint.yaml
-  - include:
-      file: db/changelog/20260928-02-drop-operational-tables.yaml
-  - include:
-      file: db/changelog/20260928-03-drop-patients-table.xml
+      file: db/changelog/sql/12-create-tickets.yaml

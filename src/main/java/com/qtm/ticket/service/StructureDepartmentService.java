@@ -4,11 +4,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.qtm.commonlib.dto.StructureDepartmentSourceDto;
+import com.qtm.ticket.client.HealthStructureClient;
 import com.qtm.ticket.dto.StructureDepartmentDto;
-import com.qtm.ticket.entity.StructureDepartmentEntity;
-import com.qtm.ticket.mapper.StructureDepartmentMapper;
-import com.qtm.ticket.repository.DisciplinaRepository;
-import com.qtm.ticket.repository.StructureDepartmentRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,39 +14,50 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class StructureDepartmentService {
 
-    private final StructureDepartmentRepository structureDepartmentRepository;
-    private final StructureDepartmentMapper structureDepartmentMapper;
-    private final DisciplinaRepository disciplinaRepository;
+    private final HealthStructureClient healthStructureClient;
 
     public List<StructureDepartmentDto> findAll() {
-        return structureDepartmentRepository.findAll().stream()
-                .map(structureDepartmentMapper::entityToDto)
+        return healthStructureClient.findDepartments(null).stream()
+                .map(this::toDto)
                 .toList();
     }
 
     public List<StructureDepartmentDto> findByStructure(String codiceStruttura) {
-        return structureDepartmentRepository.findByCodiceStruttura(codiceStruttura).stream()
-                .map(structureDepartmentMapper::entityToDto)
+        return healthStructureClient.findDepartments(codiceStruttura).stream()
+                .map(this::toDto)
                 .toList();
     }
 
     public StructureDepartmentDto save(StructureDepartmentDto dto) {
-        StructureDepartmentEntity entity = structureDepartmentMapper.dtoToEntity(dto);
-        if (dto.getCodiceDisciplina() != null) {
-            disciplinaRepository.findById(dto.getCodiceDisciplina())
-                    .ifPresent(entity::setDisciplina);
-        }
-        return structureDepartmentMapper.entityToDto(structureDepartmentRepository.save(entity));
+        StructureDepartmentSourceDto sourceDto = StructureDepartmentSourceDto.builder()
+                .id(dto.getId())
+                .codiceStruttura(dto.getCodiceStruttura())
+                .codiceDisciplina(dto.getCodiceDisciplina())
+                .disciplina(dto.getDisciplina())
+                .descrizioneDisciplina(dto.getDisciplina())
+                .indirizzo(dto.getIndirizzo())
+                .build();
+        return toDto(healthStructureClient.createDepartment(sourceDto));
     }
 
     public boolean deleteByCodes(String codiceStruttura, String codiceDisciplina) {
-        var existing = structureDepartmentRepository
-                .findByCodiceStrutturaAndDisciplina_CodiceDisciplina(codiceStruttura, codiceDisciplina);
-        if (existing.isPresent()) {
-            structureDepartmentRepository.deleteByCodiceStrutturaAndDisciplina_CodiceDisciplina(codiceStruttura,
-                    codiceDisciplina);
-            return true;
-        }
-        return false;
+        return healthStructureClient.findDepartments(codiceStruttura).stream()
+                .filter(department -> codiceDisciplina.equals(department.getCodiceDisciplina()))
+                .findFirst()
+                .map(department -> {
+                    healthStructureClient.deleteDepartment(department.getId());
+                    return true;
+                })
+                .orElse(false);
+    }
+
+    private StructureDepartmentDto toDto(StructureDepartmentSourceDto sourceDto) {
+        return StructureDepartmentDto.builder()
+                .id(sourceDto.getId())
+                .codiceStruttura(sourceDto.getCodiceStruttura())
+                .codiceDisciplina(sourceDto.getCodiceDisciplina())
+                .disciplina(sourceDto.getDisciplina())
+                .indirizzo(sourceDto.getIndirizzo())
+                .build();
     }
 }

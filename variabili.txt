@@ -1,0 +1,28 @@
+# Variabili runtime QTMTicket
+# Le variabili con valore tra parentesi sono opzionali se il default e' adeguato.
+
+DB_HOST=localhost
+DB_PORT=3306
+DB_NAME=qtmticket
+DB_USERNAME=root
+DB_PASSWORD=change_me
+SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3306/qtmticket?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&connectionTimeZone=UTC&forceConnectionTimeZoneToSession=true
+SPRING_DATASOURCE_USERNAME=root
+SPRING_DATASOURCE_PASSWORD=change_me
+SPRING_SERVLET_MULTIPART_MAX_FILE_SIZE=50MB
+SPRING_SERVLET_MULTIPART_MAX_REQUEST_SIZE=50MB
+QTM_GEOGRAPHY_SERVICE_URL=http://localhost:8087/api/geography
+SERVER_PORT=8084
+SOURCE_DATABASE=qtmticket
+
+# Variabili usate dai test/configurazioni di ambiente
+SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=http://localhost:8085/realms/QTM
+APP_KEYCLOAK_SERVER_URL=http://localhost:8085
+APP_KEYCLOAK_REALM_CODE=QTM
+APP_KEYCLOAK_CLIENT_ID=postman-client
+APP_KEYCLOAK_CLIENT_SECRET=
+APP_KEYCLOAK_ADMIN_CLIENT_ID=admin-cli-helper
+APP_KEYCLOAK_ADMIN_CLIENT_SECRET=
+APP_KEYCLOAK_ADMIN_USERNAME=
+APP_KEYCLOAK_ADMIN_PASSWORD=
+APP_KEYCLOAK_ADMIN_USER_REALM=master

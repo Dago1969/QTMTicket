@@ -3,40 +3,30 @@ package com.qtm.ticket.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.qtm.commonlib.dto.HospitalDto;
-import com.qtm.ticket.mapper.HospitalMapper;
-import com.qtm.ticket.repository.HospitalRepository;
+import com.qtm.ticket.client.HealthStructureClient;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class HospitalService {
 
-    private final HospitalRepository hospitalRepository;
-    private final HospitalMapper hospitalMapper;
+    private final HealthStructureClient healthStructureClient;
 
-    @Transactional(readOnly = true)
     public List<HospitalDto> findAll() {
-        return hospitalRepository.findAll().stream()
-                .map(hospitalMapper::entityToDto)
-                .toList();
+        return healthStructureClient.findHospitals();
     }
 
-    @Transactional(readOnly = true)
     public HospitalDto findById(Long id) {
-        return hospitalRepository.findById(id).map(hospitalMapper::entityToDto).orElse(null);
+        return healthStructureClient.findHospital(id).getBody();
     }
 
     public HospitalDto save(HospitalDto dto) {
-        var entity = hospitalMapper.dtoToEntity(dto);
-        return hospitalMapper.entityToDto(hospitalRepository.save(entity));
+        return healthStructureClient.createHospital(dto);
     }
 
     public void delete(Long id) {
-        hospitalRepository.deleteById(id);
+        healthStructureClient.deleteHospital(id);
     }
 }

@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - changeSet:
+      id: 06-create-structure-types
+      author: copilot
+      context: schema
+      preConditions:
+        - onFail: MARK_RAN
+          onError: HALT
+          not:
+            tableExists: {tableName: structure_types}
+      changes:
+        - createTable:
+            tableName: structure_types
+            columns:
+              - column: {name: code, type: VARCHAR(50), constraints: {primaryKey: true, nullable: false}}
+              - column: {name: description, type: VARCHAR(500), constraints: {nullable: false}}
+      rollback:
+        - dropTable: {tableName: structure_types, cascadeConstraints: true}

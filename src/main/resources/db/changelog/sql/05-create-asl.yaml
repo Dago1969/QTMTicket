@@ -1,0 +1,34 @@
+databaseChangeLog:
+  - changeSet:
+      id: 05-create-asl
+      author: copilot
+      context: schema
+      preConditions:
+        - onFail: MARK_RAN
+          onError: HALT
+          not:
+            tableExists: {tableName: asl}
+      changes:
+        - createTable:
+            tableName: asl
+            columns:
+              - column: {name: id, type: BIGINT, autoIncrement: true, constraints: {primaryKey: true, nullable: false}}
+              - column: {name: codice_azienda, type: VARCHAR(50), constraints: {nullable: false}}
+              - column: {name: denominazione_azienda, type: VARCHAR(500), constraints: {nullable: false}}
+              - column: {name: city_id, type: BIGINT}
+              - column: {name: province_id, type: BIGINT}
+              - column: {name: codice_regione, type: VARCHAR(10), constraints: {nullable: false}}
+              - column: {name: anno, type: INT}
+              - column: {name: indirizzo, type: VARCHAR(500)}
+              - column: {name: cap, type: VARCHAR(20)}
+              - column: {name: telefono, type: VARCHAR(100)}
+              - column: {name: fax, type: VARCHAR(100)}
+              - column: {name: email, type: VARCHAR(200)}
+              - column: {name: sito_web, type: VARCHAR(200)}
+              - column: {name: partita_iva, type: VARCHAR(50)}
+        - addUniqueConstraint:
+            tableName: asl
+            columnNames: codice_regione, codice_azienda
+            constraintName: uk_asl_codice_regione_codice_azienda
+      rollback:
+        - dropTable: {tableName: asl, cascadeConstraints: true}
