@@ -9,16 +9,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * Entity che rappresenta il tipo di struttura.
- */
+/** Tipo di ospedale mantenuto nella tabella legacy structure_types. */
 @Entity
 @Table(name = "structure_types")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class StructureTypeEntity {
+public class HospitalTypeEntity {
 
     @Id
     @Column(name = "code", length = 50, nullable = false)

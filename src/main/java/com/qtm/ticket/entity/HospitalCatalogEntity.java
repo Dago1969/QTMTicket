@@ -16,7 +16,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * Entity che rappresenta una struttura sanitaria importata dal file di elenco strutture.
+ * Entity del catalogo ospedali persistito nella tabella legacy structures.
  */
 @Entity
 @Table(name = "structures", uniqueConstraints = {
@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class StructureEntity {
+public class HospitalCatalogEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -64,5 +64,5 @@ public class StructureEntity {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "structure_type_code")
-    private StructureTypeEntity structureType;
+    private HospitalTypeEntity hospitalType;
 }

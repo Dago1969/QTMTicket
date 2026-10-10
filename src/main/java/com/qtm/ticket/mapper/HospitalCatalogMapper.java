@@ -2,22 +2,20 @@ package com.qtm.ticket.mapper;
 
 import org.springframework.stereotype.Component;
 
-import com.qtm.ticket.entity.StructureEntity;
-import com.qtm.ticket.entity.StructureTypeEntity;
-import com.qtm.ticket.dto.StructureDto;
+import com.qtm.ticket.dto.HospitalCatalogDto;
+import com.qtm.ticket.entity.HospitalCatalogEntity;
+import com.qtm.ticket.entity.HospitalTypeEntity;
 
-/**
- * Mapper per StructureEntity e StructureDto.
- */
+/** Mapper per la cache ospedali QTMTicket e il relativo DTO. */
 @Component
-public class StructureMapper {
+public class HospitalCatalogMapper {
 
-    public StructureDto entityToDto(StructureEntity entity) {
+    public HospitalCatalogDto entityToDto(HospitalCatalogEntity entity) {
         if (entity == null) {
             return null;
         }
-        StructureTypeEntity type = entity.getStructureType();
-        return StructureDto.builder()
+        HospitalTypeEntity type = entity.getHospitalType();
+        return HospitalCatalogDto.builder()
                 .id(entity.getId())
                 .codiceRegione(entity.getCodiceRegione())
                 .codiceAzienda(entity.getCodiceAzienda())
@@ -34,15 +32,15 @@ public class StructureMapper {
                 .build();
     }
 
-    public StructureEntity dtoToEntity(StructureDto dto) {
+    public HospitalCatalogEntity dtoToEntity(HospitalCatalogDto dto) {
         if (dto == null) {
             return null;
         }
-        StructureTypeEntity type = null;
+        HospitalTypeEntity type = null;
         if (dto.getStructureTypeCode() != null) {
-            type = StructureTypeEntity.builder().code(dto.getStructureTypeCode()).build();
+            type = HospitalTypeEntity.builder().code(dto.getStructureTypeCode()).build();
         }
-        return StructureEntity.builder()
+        return HospitalCatalogEntity.builder()
                 .id(dto.getId())
                 .codiceRegione(dto.getCodiceRegione())
                 .codiceAzienda(dto.getCodiceAzienda())
@@ -53,7 +51,7 @@ public class StructureMapper {
                 .comune(dto.getComune())
                 .siglaProvincia(dto.getSiglaProvincia())
                 .cityId(dto.getCityId())
-                .structureType(type)
+                .hospitalType(type)
                 .active(dto.getActive() != null ? dto.getActive() : false)
                 .build();
     }

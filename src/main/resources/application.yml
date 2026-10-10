@@ -30,7 +30,7 @@ spring:
         order_updates: true
   liquibase:
     change-log: classpath:/db/changelog/db.changelog-master.yaml
-    enabled: false
+    enabled: ${LIQUIBASE_ENABLED:true}
     drop-first: false
     default-schema: ${DB_NAME:qtmticket}
   servlet:

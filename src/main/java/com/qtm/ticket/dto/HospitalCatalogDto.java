@@ -5,14 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/**
- * DTO per la trasmissione delle strutture sanitarie.
- */
+/** DTO del catalogo locale ospedali QTMTicket. */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public class StructureDto {
+public class HospitalCatalogDto {
     private Long id;
     private String codiceRegione;
     private String codiceAzienda;

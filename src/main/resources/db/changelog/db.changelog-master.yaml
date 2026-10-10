@@ -23,3 +23,7 @@ databaseChangeLog:
       file: db/changelog/sql/11-create-hospital.yaml
   - include:
       file: db/changelog/sql/12-create-tickets.yaml
+  - include:
+      file: db/changelog/sql/13-create-medicines.yaml
+  - include:
+      file: db/changelog/data/14-seed-medicines.yaml

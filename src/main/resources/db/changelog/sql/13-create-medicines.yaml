@@ -1,0 +1,103 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20261008-01-create-medicines
+      author: copilot
+      preConditions:
+        onFail: MARK_RAN
+        onError: HALT
+        not:
+          tableExists:
+            tableName: medicines
+      changes:
+        - createTable:
+            tableName: medicines
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: codice_aic
+                  type: VARCHAR(64)
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: uk_medicines_codice_aic
+              - column:
+                  name: cod_farmaco
+                  type: VARCHAR(64)
+                  defaultValue: ""
+                  constraints:
+                    nullable: false
+              - column:
+                  name: cod_confezione
+                  type: VARCHAR(64)
+                  defaultValue: ""
+                  constraints:
+                    nullable: false
+              - column:
+                  name: denominazione
+                  type: VARCHAR(255)
+                  defaultValue: ""
+                  constraints:
+                    nullable: false
+              - column:
+                  name: descrizione
+                  type: VARCHAR(1000)
+              - column:
+                  name: codice_ditta
+                  type: VARCHAR(64)
+              - column:
+                  name: ragione_sociale
+                  type: VARCHAR(255)
+              - column:
+                  name: stato_amministrativo
+                  type: VARCHAR(255)
+              - column:
+                  name: tipo_procedura
+                  type: VARCHAR(255)
+              - column:
+                  name: forma
+                  type: VARCHAR(255)
+              - column:
+                  name: codice_atc
+                  type: VARCHAR(64)
+              - column:
+                  name: pa_associati
+                  type: TEXT
+              - column:
+                  name: fornitura
+                  type: VARCHAR(1000)
+              - column:
+                  name: link_fi
+                  type: VARCHAR(2048)
+              - column:
+                  name: link_rcp
+                  type: VARCHAR(2048)
+              - column:
+                  name: visible_for_tenants
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+        - createIndex:
+            tableName: medicines
+            indexName: idx_medicines_cod_farmaco
+            columns:
+              - column:
+                  name: cod_farmaco
+        - createIndex:
+            tableName: medicines
+            indexName: idx_medicines_denominazione
+            columns:
+              - column:
+                  name: denominazione
+        - createIndex:
+            tableName: medicines
+            indexName: idx_medicines_codice_atc
+            columns:
+              - column:
+                  name: codice_atc
