@@ -1,0 +1,9 @@
+# Shared remote environment values for the deployable QTM services.
+# Override CHANGE_ME with the actual remote database host and credentials.
+DB_HOST=CHANGE_ME
+DB_PORT=3306
+JAVA_RUNTIME_IMAGE=eclipse-temurin:17-jre-alpine
+SERVICE_NETWORK=qtm-net
+SERVICE_ROUTER_PRIORITY=100
+SPRING_DATASOURCE_USERNAME=CHANGE_ME
+SPRING_DATASOURCE_PASSWORD=CHANGE_ME
