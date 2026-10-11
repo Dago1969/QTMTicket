@@ -1,0 +1,63 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20261008-02-seed-medicines
+      author: copilot
+      preConditions:
+        onFail: MARK_RAN
+        onError: HALT
+        tableExists:
+          tableName: medicines
+      changes:
+        - loadUpdateData:
+            tableName: medicines
+            primaryKey: codice_aic
+            file: ../data/confezioni_fornitura.csv
+            relativeToChangelogFile: true
+            separator: ";"
+            encoding: UTF-8
+            columns:
+              - column:
+                  header: CODICE_AIC
+                  name: codice_aic
+              - column:
+                  header: COD_FARMACO
+                  name: cod_farmaco
+              - column:
+                  header: COD_CONFEZIONE
+                  name: cod_confezione
+              - column:
+                  header: DENOMINAZIONE
+                  name: denominazione
+              - column:
+                  header: DESCRIZIONE
+                  name: descrizione
+              - column:
+                  header: CODICE_DITTA
+                  name: codice_ditta
+              - column:
+                  header: RAGIONE_SOCIALE
+                  name: ragione_sociale
+              - column:
+                  header: STATO_AMMINISTRATIVO
+                  name: stato_amministrativo
+              - column:
+                  header: TIPO_PROCEDURA
+                  name: tipo_procedura
+              - column:
+                  header: FORMA
+                  name: forma
+              - column:
+                  header: CODICE_ATC
+                  name: codice_atc
+              - column:
+                  header: PA_ASSOCIATI
+                  name: pa_associati
+              - column:
+                  header: FORNITURA
+                  name: fornitura
+              - column:
+                  header: LINK_FI
+                  name: link_fi
+              - column:
+                  header: LINK_RCP
+                  name: link_rcp
