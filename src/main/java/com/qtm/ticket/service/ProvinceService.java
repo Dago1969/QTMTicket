@@ -4,11 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.qtm.ticket.dto.ProvinceDto;
-import com.qtm.ticket.entity.ProvinceEntity;
-import com.qtm.ticket.geography.StaticGeographyCatalog;
-import com.qtm.ticket.mapper.ProvinceMapper;
-import com.qtm.ticket.repository.ProvinceRepository;
+import com.qtm.commonlib.dto.ProvinceDto;
+import com.qtm.ticket.client.QtmGeographyClient;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,39 +18,25 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ProvinceService {
 
-    private final ProvinceRepository provinceRepository;
-    private final ProvinceMapper provinceMapper;
-    private final StaticGeographyCatalog staticGeographyCatalog;
+    private final QtmGeographyClient geographyClient;
 
     public List<ProvinceDto> findAll() {
-        return provinceRepository.findAllByOrderByName().stream()
-                .map(provinceMapper::entityToDto)
-                .toList();
+        return geographyClient.findProvinces();
     }
 
     public List<ProvinceDto> findByRegionId(Long regionId) {
-        try {
-            return provinceRepository.findByRegionId(regionId).stream()
-                    .map(provinceMapper::entityToDto)
-                    .toList();
-        } catch (RuntimeException exception) {
-            log.error("[ProvinceService] Falling back to static geography catalog for regionId={}", regionId, exception);
-            return staticGeographyCatalog.findProvincesByRegionId(regionId);
-        }
+        return geographyClient.findProvincesByRegionId(regionId);
     }
 
     public ProvinceDto findById(Long id) {
-        return provinceRepository.findById(id)
-                .map(provinceMapper::entityToDto)
-                .orElse(null);
+        return geographyClient.findProvinceById(id).getBody();
     }
 
     public ProvinceDto save(ProvinceDto dto) {
-        ProvinceEntity entity = provinceMapper.dtoToEntity(dto);
-        return provinceMapper.entityToDto(provinceRepository.save(entity));
+        return dto.getId() == null ? geographyClient.createProvince(dto) : geographyClient.updateProvince(dto.getId(), dto);
     }
 
     public void delete(Long id) {
-        provinceRepository.deleteById(id);
+        geographyClient.deleteProvince(id);
     }
 }

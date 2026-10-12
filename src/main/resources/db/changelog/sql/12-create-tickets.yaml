@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: 12-create-tickets
+      author: copilot
+      context: schema
+      preConditions:
+        - onFail: MARK_RAN
+          onError: HALT
+          not:
+            tableExists: {tableName: tickets}
+      changes:
+        - createTable:
+            tableName: tickets
+            columns:
+              - column: {name: id, type: BIGINT, autoIncrement: true, constraints: {primaryKey: true, nullable: false}}
+              - column: {name: realm, type: VARCHAR(100), constraints: {nullable: false}}
+              - column: {name: project, type: VARCHAR(100), constraints: {nullable: false}}
+              - column: {name: patient_id, type: VARCHAR(100), constraints: {nullable: false}}
+              - column: {name: therapeutic_plan_id, type: VARCHAR(100)}
+              - column: {name: visit_date, type: DATETIME}
+              - column: {name: prevalent_nurse_id, type: VARCHAR(100)}
+              - column: {name: hospital_id, type: VARCHAR(100)}
+              - column: {name: department_id, type: VARCHAR(100)}
+              - column: {name: ticket_type, type: VARCHAR(50), constraints: {nullable: false}}
+              - column: {name: status, type: VARCHAR(50), constraints: {nullable: false}}
+              - column: {name: title, type: VARCHAR(500), constraints: {nullable: false}}
+              - column: {name: description, type: TEXT}
+              - column: {name: content_json, type: TEXT}
+              - column: {name: created_at, type: DATETIME, constraints: {nullable: false}}
+              - column: {name: updated_at, type: DATETIME, constraints: {nullable: false}}
+      rollback:
+        - dropTable: {tableName: tickets, cascadeConstraints: true}

@@ -1,7 +1,16 @@
 package com.qtm.ticket.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "hospital", uniqueConstraints = {@UniqueConstraint(columnNames = {"codice_asl","codice_struttura"})})
@@ -48,15 +57,12 @@ public class HospitalEntity {
     @Column(name = "tipo_struttura", length = 200)
     private String tipoStruttura;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "hospital_type_id")
-    private HospitalTypeEntity hospitalType;
+    @Column(name = "hospital_type_id")
+    private Long hospitalTypeId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "asl_id")
-    private ASLEntity asl;
+    @Column(name = "asl_id")
+    private Long aslId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "city_id")
-    private CityEntity city;
+    @Column(name = "city_id")
+    private Long cityId;
 }

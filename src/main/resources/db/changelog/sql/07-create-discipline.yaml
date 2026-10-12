@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - changeSet:
+      id: 07-create-discipline
+      author: copilot
+      context: schema
+      preConditions:
+        - onFail: MARK_RAN
+          onError: HALT
+          not:
+            tableExists: {tableName: discipline}
+      changes:
+        - createTable:
+            tableName: discipline
+            columns:
+              - column: {name: codice_disciplina, type: VARCHAR(20), constraints: {primaryKey: true, nullable: false}}
+              - column: {name: disciplina, type: VARCHAR(200), constraints: {nullable: false}}
+      rollback:
+        - dropTable: {tableName: discipline, cascadeConstraints: true}

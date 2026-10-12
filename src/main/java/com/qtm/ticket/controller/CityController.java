@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.qtm.ticket.dto.CityDto;
+import com.qtm.commonlib.dto.CityDto;
 import com.qtm.ticket.service.CityService;
 
 import lombok.RequiredArgsConstructor;

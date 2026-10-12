@@ -2,16 +2,17 @@ package com.qtm.ticket.service;
 
 import java.util.List;
 
+import feign.FeignException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
-import com.qtm.ticket.dto.RegionDto;
-import com.qtm.ticket.entity.RegionEntity;
-import com.qtm.ticket.geography.StaticGeographyCatalog;
-import com.qtm.ticket.mapper.RegionMapper;
-import com.qtm.ticket.repository.RegionRepository;
+import com.qtm.ticket.client.QtmGeographyClient;
+import com.qtm.commonlib.dto.RegionDto;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import static org.springframework.http.HttpStatus.BAD_GATEWAY;
 
 /**
  * Service per la gestione delle regioni.
@@ -21,33 +22,34 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class RegionService {
 
-    private final RegionRepository regionRepository;
-    private final RegionMapper regionMapper;
-    private final StaticGeographyCatalog staticGeographyCatalog;
+    private final QtmGeographyClient geographyClient;
 
     public List<RegionDto> findAll() {
-        try {
-            return regionRepository.findAllByOrderByName().stream()
-                    .map(regionMapper::entityToDto)
-                    .toList();
-        } catch (RuntimeException exception) {
-            log.error("[RegionService] Falling back to static geography catalog for regions", exception);
-            return staticGeographyCatalog.getRegions();
-        }
+        return geographyClient.findRegions();
     }
 
     public RegionDto findById(Long id) {
-        return regionRepository.findById(id)
-                .map(regionMapper::entityToDto)
-                .orElse(null);
+        try {
+            return geographyClient.findRegionById(id).getBody();
+        } catch (FeignException exception) {
+            log.error("[RegionService] Geography service unavailable for regionId={}", id, exception);
+            throw new ResponseStatusException(BAD_GATEWAY, "Servizio geografia non disponibile", exception);
+        }
     }
 
     public RegionDto save(RegionDto dto) {
-        RegionEntity entity = regionMapper.dtoToEntity(dto);
-        return regionMapper.entityToDto(regionRepository.save(entity));
+        try {
+            return dto.getId() == null ? geographyClient.createRegion(dto) : geographyClient.updateRegion(dto.getId(), dto);
+        } catch (FeignException exception) {
+            throw new ResponseStatusException(BAD_GATEWAY, "Servizio geografia non disponibile", exception);
+        }
     }
 
     public void delete(Long id) {
-        regionRepository.deleteById(id);
+        try {
+            geographyClient.deleteRegion(id);
+        } catch (FeignException exception) {
+            throw new ResponseStatusException(BAD_GATEWAY, "Servizio geografia non disponibile", exception);
+        }
     }
 }

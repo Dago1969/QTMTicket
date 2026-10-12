@@ -1,7 +1,6 @@
 package com.qtm.ticket.client;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 import feign.RequestInterceptor;
 
@@ -9,7 +8,6 @@ import com.qtm.ticket.service.RealmEndpointService;
 
 import lombok.RequiredArgsConstructor;
 
-@Configuration
 @RequiredArgsConstructor
 public class QtmdbFeignConfiguration {
 

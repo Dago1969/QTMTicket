@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.qtm.ticket.dto.RegionDto;
+import com.qtm.commonlib.dto.RegionDto;
 import com.qtm.ticket.service.RegionService;
 
 import lombok.RequiredArgsConstructor;

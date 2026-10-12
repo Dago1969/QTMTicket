@@ -1,10 +1,17 @@
 package com.qtm.ticket.entity;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+/** Tipo di ospedale mantenuto nella tabella legacy structure_types. */
 @Entity
-@Table(name = "hospital_type", uniqueConstraints = {@UniqueConstraint(columnNames = {"code"})})
+@Table(name = "structure_types")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,12 +19,9 @@ import lombok.*;
 public class HospitalTypeEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "code", length = 100, nullable = false)
+    @Column(name = "code", length = 50, nullable = false)
     private String code;
 
-    @Column(name = "description", length = 500)
+    @Column(name = "description", length = 500, nullable = false)
     private String description;
 }

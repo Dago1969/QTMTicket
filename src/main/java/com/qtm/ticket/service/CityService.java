@@ -1,10 +1,7 @@
 package com.qtm.ticket.service;
 
-import com.qtm.ticket.dto.CityDto;
-import com.qtm.ticket.entity.CityEntity;
-import com.qtm.ticket.geography.StaticGeographyCatalog;
-import com.qtm.ticket.mapper.CityMapper;
-import com.qtm.ticket.repository.CityRepository;
+import com.qtm.commonlib.dto.CityDto;
+import com.qtm.ticket.client.QtmGeographyClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,39 +16,25 @@ import java.util.List;
 @Slf4j
 public class CityService {
 
-    private final CityRepository cityRepository;
-    private final CityMapper cityMapper;
-    private final StaticGeographyCatalog staticGeographyCatalog;
+    private final QtmGeographyClient geographyClient;
 
     public List<CityDto> findAll() {
-        return cityRepository.findAllByOrderByName().stream()
-                .map(cityMapper::entityToDto)
-                .toList();
+        return geographyClient.findCities();
     }
 
     public List<CityDto> findByProvinceId(Long provinceId) {
-        try {
-            return cityRepository.findByProvinceId(provinceId).stream()
-                    .map(cityMapper::entityToDto)
-                    .toList();
-        } catch (RuntimeException exception) {
-            log.error("[CityService] Falling back to static geography catalog for provinceId={}", provinceId, exception);
-            return staticGeographyCatalog.findCitiesByProvinceId(provinceId);
-        }
+        return geographyClient.findCitiesByProvinceId(provinceId);
     }
 
     public CityDto findById(Long id) {
-        return cityRepository.findById(id)
-                .map(cityMapper::entityToDto)
-                .orElse(null);
+        return geographyClient.findCityById(id).getBody();
     }
 
     public CityDto save(CityDto dto) {
-        CityEntity entity = cityMapper.dtoToEntity(dto);
-        return cityMapper.entityToDto(cityRepository.save(entity));
+        return dto.getId() == null ? geographyClient.createCity(dto) : geographyClient.updateCity(dto.getId(), dto);
     }
 
     public void delete(Long id) {
-        cityRepository.deleteById(id);
+        geographyClient.deleteCity(id);
     }
 }

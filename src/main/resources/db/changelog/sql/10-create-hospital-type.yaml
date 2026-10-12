@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - changeSet:
+      id: 10-create-hospital-type
+      author: copilot
+      context: schema
+      preConditions:
+        - onFail: MARK_RAN
+          onError: HALT
+          not:
+            tableExists: {tableName: hospital_type}
+      changes:
+        - createTable:
+            tableName: hospital_type
+            columns:
+              - column: {name: id, type: BIGINT, autoIncrement: true, constraints: {primaryKey: true, nullable: false}}
+              - column: {name: code, type: VARCHAR(100), constraints: {nullable: false, unique: true}}
+              - column: {name: description, type: VARCHAR(500)}
+      rollback:
+        - dropTable: {tableName: hospital_type, cascadeConstraints: true}
