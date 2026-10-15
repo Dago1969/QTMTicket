@@ -1,0 +1,43 @@
+databaseChangeLog:
+    - changeSet:
+        id: 20261015-01-make-medicines-codice-aic-primary-key
+        author: copilot
+        preConditions:
+            onFail: MARK_RAN
+            onError: HALT
+            and:
+                - tableExists:
+                    tableName: medicines
+                - columnExists:
+                    tableName: medicines
+                    columnName: id
+                - columnExists:
+                    tableName: medicines
+                    columnName: codice_aic
+        changes:
+            - modifyDataType:
+                tableName: medicines
+                columnName: id
+                newDataType: BIGINT
+            - dropPrimaryKey:
+                tableName: medicines
+            - addPrimaryKey:
+                columnNames: codice_aic
+                constraintName: pk_medicines
+                tableName: medicines
+            - dropColumn:
+                columnName: id
+                tableName: medicines
+    - changeSet:
+        id: 20261015-02-drop-medicines-codice-aic-unique-constraint
+        author: copilot
+        preConditions:
+            onFail: MARK_RAN
+            onError: HALT
+            uniqueConstraintExists:
+                tableName: medicines
+                constraintName: uk_medicines_codice_aic
+        changes:
+            - dropUniqueConstraint:
+                constraintName: uk_medicines_codice_aic
+                tableName: medicines

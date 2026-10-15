@@ -13,11 +13,9 @@ import java.util.Optional;
 /**
  * Accesso al catalogo farmaci condiviso persistito da QTMTicket.
  */
-public interface MedicineRepository extends JpaRepository<MedicineEntity, Long> {
+public interface MedicineRepository extends JpaRepository<MedicineEntity, String> {
 
     boolean existsByCodiceAicIgnoreCase(String codiceAic);
-
-    boolean existsByCodiceAicIgnoreCaseAndIdNot(String codiceAic, Long id);
 
     Optional<MedicineEntity> findByCodiceAicIgnoreCase(String codiceAic);
 

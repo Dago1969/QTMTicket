@@ -12,7 +12,6 @@ public class MedicineMapper {
 
     public MedicineDto toDto(MedicineEntity entity) {
         MedicineDto dto = new MedicineDto();
-        dto.setId(entity.getId());
         dto.setCodiceAic(entity.getCodiceAic());
         dto.setCodFarmaco(entity.getCodFarmaco());
         dto.setCodConfezione(entity.getCodConfezione());

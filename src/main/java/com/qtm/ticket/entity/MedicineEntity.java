@@ -2,8 +2,6 @@ package com.qtm.ticket.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -21,10 +19,7 @@ import lombok.Setter;
 public class MedicineEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "codice_aic", nullable = false, unique = true, length = 64)
+    @Column(name = "codice_aic", nullable = false, length = 64)
     private String codiceAic;
 
     @Column(name = "cod_farmaco", nullable = false, length = 64)
