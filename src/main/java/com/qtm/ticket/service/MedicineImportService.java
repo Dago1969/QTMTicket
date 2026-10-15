@@ -18,6 +18,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import static org.springframework.http.HttpStatus.BAD_GATEWAY;
 import static org.springframework.http.MediaType.parseMediaType;
 
@@ -26,6 +27,7 @@ import static org.springframework.http.MediaType.parseMediaType;
  */
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MedicineImportService {
 
     private static final int BATCH_SIZE = 500;
@@ -86,6 +88,9 @@ public class MedicineImportService {
                     persistBatch(batch);
                     importedRows += batch.size();
                     batch.clear();
+                    if (importedRows % 10_000 == 0) {
+                        log.info("Elaborati {} farmaci dal catalogo AIFA", importedRows);
+                    }
                 }
             }
             if (!batch.isEmpty()) {

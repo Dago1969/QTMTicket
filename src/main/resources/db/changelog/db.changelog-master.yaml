@@ -27,3 +27,5 @@ databaseChangeLog:
       file: db/changelog/sql/13-create-medicines.yaml
   - include:
       file: db/changelog/sql/14-seed-medicines.yaml
+  - include:
+      file: db/changelog/sql/15-make-medicines-codice-aic-primary-key.yaml

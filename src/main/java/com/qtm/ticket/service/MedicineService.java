@@ -47,11 +47,6 @@ public class MedicineService {
     }
 
     @Transactional(readOnly = true)
-    public MedicineDto findById(Long id) {
-        return medicineMapper.toDto(findEntityById(id));
-    }
-
-    @Transactional(readOnly = true)
     public MedicineDto findByCodiceAic(String codiceAic) {
         String normalized = normalizeRequiredValue(codiceAic);
         return medicineRepository.findByCodiceAicIgnoreCase(normalized)
@@ -93,27 +88,39 @@ public class MedicineService {
                 .map(medicineMapper::toDto);
     }
 
-    public MedicineDto updateTenantVisibility(Long id, boolean visible) {
-        MedicineEntity medicine = findEntityById(id);
+    public MedicineDto updateTenantVisibility(String codiceAic, boolean visible) {
+        MedicineEntity medicine = findEntityByCodiceAic(codiceAic);
         medicine.setVisibleForTenants(visible);
         return medicineMapper.toDto(medicineRepository.save(medicine));
     }
 
-    public MedicineDto update(Long id, MedicineDto medicineDto) {
-        MedicineEntity current = findEntityById(id);
-        if (medicineRepository.existsByCodiceAicIgnoreCaseAndIdNot(medicineDto.getCodiceAic(), id)) {
-            throw new ResponseStatusException(CONFLICT, "Esiste gia un farmaco con lo stesso codice AIC");
+    public MedicineDto update(String codiceAic, MedicineDto medicineDto) {
+        MedicineEntity current = findEntityByCodiceAic(codiceAic);
+        String requestedCodiceAic = normalizeRequiredValue(medicineDto.getCodiceAic());
+        if (!current.getCodiceAic().equals(requestedCodiceAic)) {
+            MedicineEntity matchingMedicine = medicineRepository.findByCodiceAicIgnoreCase(requestedCodiceAic)
+                    .orElse(null);
+            if (matchingMedicine != null && !matchingMedicine.getCodiceAic().equals(current.getCodiceAic())) {
+                throw new ResponseStatusException(CONFLICT, "Esiste gia un farmaco con lo stesso codice AIC");
+            }
+            boolean visibleForTenants = current.isVisibleForTenants();
+            medicineRepository.delete(current);
+            medicineRepository.flush();
+            MedicineEntity replacement = medicineMapper.toEntity(medicineDto);
+            replacement.setCodiceAic(requestedCodiceAic);
+            replacement.setVisibleForTenants(visibleForTenants);
+            return medicineMapper.toDto(medicineRepository.save(replacement));
         }
         medicineMapper.updateEntity(current, medicineDto);
         return medicineMapper.toDto(medicineRepository.save(current));
     }
 
-    public void delete(Long id) {
-        medicineRepository.delete(findEntityById(id));
+    public void delete(String codiceAic) {
+        medicineRepository.delete(findEntityByCodiceAic(codiceAic));
     }
 
-    private MedicineEntity findEntityById(Long id) {
-        return medicineRepository.findById(id)
+    private MedicineEntity findEntityByCodiceAic(String codiceAic) {
+        return medicineRepository.findByCodiceAicIgnoreCase(normalizeRequiredValue(codiceAic))
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Farmaco non trovato"));
     }
 
